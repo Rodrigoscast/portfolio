@@ -2,20 +2,10 @@
 
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function LanguageSwitch() {
-  const [lang, setLang] = useState("pt");
-
-  useEffect(() => {
-    const saved = localStorage.getItem("language");
-    if (saved) setLang(saved);
-  }, []);
-
-  const toggleLanguage = () => {
-    const newLang = lang === "pt" ? "en" : "pt";
-    setLang(newLang);
-    localStorage.setItem("language", newLang);
-  };
+  const { lang, toggleLanguage } = useLanguage();
 
   return (
     <StyledSwitch onClick={toggleLanguage} $lang={lang}>

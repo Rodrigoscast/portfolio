@@ -8,7 +8,7 @@ export default function CodeCard({ code }: { code: string }) {
    const { theme, setTheme, systemTheme } = useTheme();
   const currentTheme = theme === "system" ? systemTheme : theme;
   return (
-    <aside className="bg-white dark:bg-black text-white rounded-lg w-full font-mono">
+    <aside className="bg-white dark:bg-black text-white rounded-lg w-full font-mono p-4">
       <div className="flex justify-between items-center">
         <div className="flex space-x-2 text-red-500">
           <div className="w-3 h-3 rounded-full bg-red-500" />
