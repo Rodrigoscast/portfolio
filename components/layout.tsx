@@ -130,8 +130,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 2.4, duration: 0.8 }}
-          className='fixed left-3 top-1/2 -translate-y-1/2 z-20 border-r-3 border-gray-400 flex flex-col flex rounded-full bg-white/90 text-sm font-medium text-base-800 shadow-lg shadow-base-800/5 backdrop-blur dark:bg-white/10 dark:text-base-200 dark:ring-white/10 h-3/10 px-2 py-3 justify-around items-center'
+          className='fixed left-3 top-1/2 -translate-y-1/2 z-20 flex flex-col flex rounded-full bg-white dark:bg-sidebar text-sm font-medium text-base-800 shadow-[5px_0_20px_rgba(0,0,0,0.15)] shadow-base-800/5 dark:shadow-gray-600 h-3/10 px-2 py-3 justify-around items-center'
         >
+
           <ContextMenu>
             <ContextMenuTrigger>
               <ThemeToggle />
@@ -158,7 +159,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.4, duration: 0.8 }}
-            className="flex rounded-full bg-white/90 text-sm font-medium border-b-3 border-gray-400 text-base-800 shadow-lg shadow-base-800/5 backdrop-blur dark:bg-white/10 dark:text-base-200 dark:ring-white/10 w-2/5 px-5 py-3 justify-around"
+            className="flex rounded-full text-sm font-medium bg-white dark:bg-sidebar shadow-[0_5px_20px_rgba(0,0,0,0.1)] shadow-base-800/5 dark:shadow-gray-600 w-2/5 px-5 py-3 justify-around"
           >
             <House onClick={() => scrollToSection("home")} className='cursor-pointer hover:scale-110 hover:rotate-15 transition-all duration-200 ease-in-out' />
             <Code2 onClick={() => scrollToSection("code")} className='cursor-pointer hover:scale-110 hover:rotate-15 transition-all duration-200 ease-in-out' />
