@@ -2,12 +2,18 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 import { LanguageSwitch } from "@/components/LanguageSwitch";
 import 'react-toastify/dist/ReactToastify.css'
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Music, House, Code2, FolderGit2, MessageSquareMoreIcon } from "lucide-react"
+import { Music, House, Code2, FolderGit2, MessageSquareMoreIcon, X } from "lucide-react"
 import CodeCard from '@/components/CardCode';
 import { motion } from "framer-motion";
+import { Canvas } from "@react-three/fiber";
+import { Environment } from "@react-three/drei";
+import CassetteModel from "@/components/CassetteModel";
+import { Button } from '@/components/ui/button';
 
 import {
   ContextMenu,
@@ -18,6 +24,9 @@ import {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
+  const [tape, setTape] = useState(false)
+  const [doom, setDoom] = useState(false)
+  const [activeSection, setActiveSection] = useState<string>("home");
   const [code, setCode] = useState<{ tema: string; language: string }>({
     tema: "",
     language: ""
@@ -116,15 +125,48 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [sequence]);
 
   const executarAcaoSecreta = () => {
-    alert("🕹️ Modo secreto ativado!");
+    setTape(true)
+  };
+
+  const handleInsert = () => {
+    setTape(false)
+    setDoom(true)   
   };
 
   useEffect(() => {
-    console.log(sequence)
-  }, [sequence])
+    const scrollContainer = document.querySelector(
+      '[data-radix-scroll-area-viewport]'
+    );
+
+    if (!scrollContainer) return;
+
+    const sections = ["home", "code", "projects", "contact", "music"];
+
+    const handleScroll = () => {
+      sections.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const rect = el.getBoundingClientRect();
+
+        // Checa se a seção está no centro da área visível
+        if (rect.top <= window.innerHeight * 0.4 && rect.bottom >= window.innerHeight * 0.4) {
+          setActiveSection(id);
+        }
+      });
+    };
+
+    scrollContainer.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => {
+      scrollContainer.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div className="flex h-full bg-gray-100 dark:bg-sidebar text-gray-800 dark:text-gray-100 w-full">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="flex-1 flex flex-col">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -161,17 +203,96 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             transition={{ delay: 2.4, duration: 0.8 }}
             className="flex rounded-full text-sm font-medium bg-white dark:bg-sidebar shadow-[0_5px_20px_rgba(0,0,0,0.1)] shadow-base-800/5 dark:shadow-gray-600 w-2/5 px-5 py-3 justify-around"
           >
-            <House onClick={() => scrollToSection("home")} className='cursor-pointer hover:scale-110 hover:rotate-15 transition-all duration-200 ease-in-out' />
-            <Code2 onClick={() => scrollToSection("code")} className='cursor-pointer hover:scale-110 hover:rotate-15 transition-all duration-200 ease-in-out' />
-            <FolderGit2 onClick={() => scrollToSection("projects")} className='cursor-pointer hover:scale-110 hover:rotate-15 transition-all duration-200 ease-in-out' />
-            <MessageSquareMoreIcon onClick={() => scrollToSection("contact")} className='cursor-pointer hover:scale-110 hover:rotate-15 transition-all duration-200 ease-in-out' />
-            <Music onClick={() => scrollToSection("music")} className='cursor-pointer hover:scale-110 hover:rotate-15 transition-all duration-200 ease-in-out' />
+
+            <div
+              onClick={() => scrollToSection("home")}
+              className={`transition-all duration-200 ease-in-out p-3 rounded-full cursor-pointer flex items-center justify-center ${
+                  activeSection === "home"
+                    ? "scale-125 text-blue-500 dark:text-blue-300"
+                    : "hover:scale-110 hover:rotate-15"
+                }`}
+            >
+              <House />
+            </div>
+
+            <div
+              onClick={() => scrollToSection("code")}
+              className={`transition-all duration-200 ease-in-out p-3 rounded-full cursor-pointer flex items-center justify-center ${
+                  activeSection === "code"
+                    ? "scale-125 text-blue-500 dark:text-blue-300"
+                    : "hover:scale-110 hover:rotate-15"
+                }`}
+            >
+              <Code2 />
+            </div>
+
+            <div
+              onClick={() => scrollToSection("projects")}
+              className={`transition-all duration-200 ease-in-out p-3 rounded-full cursor-pointer flex items-center justify-center ${
+                  activeSection === "projects"
+                    ? "scale-125 text-blue-500 dark:text-blue-300"
+                    : "hover:scale-110 hover:rotate-15"
+                }`}
+            >
+              <FolderGit2 />
+            </div>
+
+            <div
+              onClick={() => scrollToSection("contact")}
+              className={`transition-all duration-200 ease-in-out p-3 rounded-full cursor-pointer flex items-center justify-center ${
+                  activeSection === "contact"
+                    ? "scale-125 text-blue-500 dark:text-blue-300"
+                    : "hover:scale-110 hover:rotate-15"
+                }`}
+            >
+              <MessageSquareMoreIcon  />
+            </div>
+
+            <div
+              onClick={() => scrollToSection("music")}
+              className={`transition-all duration-200 ease-in-out p-3 rounded-full cursor-pointer flex items-center justify-center ${
+                  activeSection === "music"
+                    ? "scale-125 text-blue-500 dark:text-blue-300"
+                    : "hover:scale-110 hover:rotate-15"
+                }`}
+            >
+              <Music />
+            </div>
           </motion.div>
         </header>
         <main className='h-full'>
           {children}
         </main>
       </div>
+      {tape && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-black/60"
+        >
+          <Canvas camera={{ position: [0, 1.5, 6], fov: 50 }}>
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[10, 10, 5]} intensity={1.5} />
+            <Environment preset="studio" />
+            <CassetteModel onInsert={handleInsert} />
+          </Canvas>
+        </div>
+      )}
+      
+      {doom && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-black/60"
+        >
+          <h1>Rodando Doom</h1>
+          <Button 
+            variant={'destructive'} 
+            size={'icon'} 
+            onClick={() => setDoom(false)} 
+            className='cursor-pointer absolute top-10 right-10'
+          >
+            <X className='!w-8 !h-8'/>
+          </Button>
+        </div>
+      )}
+
     </div>
   )
 }

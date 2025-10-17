@@ -1,0 +1,73 @@
+Backend
+Python (FastAPI, Django, Flask, PyWebView, PySimpleGUI, Selenium, PyAutoGUI, Pandas, openpyxl)
+Node.js (Express, JSON-server)
+PHP (Puro, Laravel)
+C# (Unity, APIs, lógica de jogo e integração com backend)
+Java (conceitos sólidos, POO, APIs, JDBC, e integração com bancos de dados)
+Design e consumo de APIs REST — Endpoints CRUD, autenticação, versionamento, tratamento de erros e documentação (OpenAPI/Swagger).
+POO em Java e Python — aplicação prática de herança, polimorfismo, encapsulamento e abstração em projetos reais.
+
+Frontend
+React / Next.js / Vue.js (NextUI, Shadcn, Radix UI)
+Uteis (TailwindCSS, jQuery, Bootstrap)
+
+Mobile
+React Native (Expo)
+Dart / Flutter
+
+Data
+PostgreSQL / MySQL / SQLite / Oracle
+MongoDB
+Power BI
+
+DevOps / Infra & Deploy
+PM2 / processos Node
+Netlify / Render / Vercel (Deploy completo)
+Git / GitHub / GitHub Actions
+Supabase / Firebase (Auth & DB)
+Hospedagem completa — experiência em publicação e manutenção de backend, frontend, banco de dados e aplicações mobile.
+Servidores IIS (Windows Server) — configuração, deploy e gerenciamento de aplicações web.
+
+Segurança da Informação & Ethical Hacking
+Segurança em autenticação
+Logging e monitoramento
+Proteção de endpoints
+
+Cybersegurança
+Linux básico
+Reconhecimento e enumeração
+Port scanning & serviços
+Enumeração de serviços web
+Uso de Netcat / SSH básico
+Conceitos de exploração web
+Privilégio e pós-exploração (noções iniciais)
+Cracking básico de senhas
+
+Games / Lógica e Programação
+Unity (C#) — criação de games, lógica de colisão, animação, UI, controle de estados e integração com scripts.
+PyGame (python)
+
+Inteligência Artificial (IA)
+Engenharia de Prompt — criação de prompts otimizados e contextuais para modelos de linguagem (GPT, Claude, etc.).
+Consumo de APIs de IA — integração com APIs da OpenAI, Anthropic e outros provedores.
+Criação de contexto dinâmico — uso de histórico, embeddings e metadados para manter coerência em aplicações com IA.
+Modelos de geração — experiência em uso de modelos para texto, imagem e dados estruturados.
+Automações inteligentes — scripts que utilizam IA para análise, resumo, tradução ou resposta automática.
+Assistentes personalizados — integração de IA em aplicações web, desktop ou mobile (chatbots, análise contextual e suporte interno).
+Uso prático em sistemas — IA aplicada a rotinas do sistema (validação de dados, respostas automáticas, relatórios inteligentes).
+Análise de linguagem — processamento e limpeza de texto para interação com modelos de NLP.
+
+Documentação & Metodologias
+Documentação de software — uso de ferramentas e padrões técnicos (Swagger, Markdown, diagramas UML).
+Metodologias ágeis — experiência com Scrum, Kanban e boas práticas de desenvolvimento colaborativo.
+
+Extras
+Postman / Insomnia
+DBeaver / pgAdmin / MySQL Workbench
+Burp Suite
+
+Boas práticas / Soft skills técnicas
+Testes e validação — Unit tests, testes de integração e validação de inputs.
+Documentação & Readme — Manter APIs e projetos documentados para equipe/usuário.
+Cultura DevOps — Entender deploys repetíveis, backups e rollback.
+Resolver problemas / debugging — Diagnóstico rápido em backend, front e infra.
