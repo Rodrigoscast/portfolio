@@ -1,0 +1,181 @@
+[
+  {
+    "categoria": "Frontend",
+    "skills": [
+      "React",
+      "Next.js",
+      "Vue.js",
+      "Angular",
+      "TailwindCSS",
+      "jQuery",
+      "Bootstrap",
+      "JavaScript",
+      "TypeScript",
+      "Framer Motion"
+    ]
+  },
+  {
+    "categoria": "Backend",
+    "subgrupos": [
+      {
+        "nome": "Python",
+        "skills": [
+          "FastAPI",
+          "Django",
+          "Flask",
+          "PyWebView",
+          "PySimpleGUI",
+          "Selenium",
+          "PyAutoGUI",
+          "Pandas",
+          "openpyxl"
+        ]
+      },
+      {
+        "nome": "Node.js",
+        "skills": ["Express", "JSON-server"]
+      },
+      {
+        "nome": "PHP",
+        "skills": ["PHP", "Laravel"]
+      },
+      {
+        "nome": "C#",
+        "skills": ["Unity", "APIs C#", "Integração C#"]
+      },
+      {
+        "nome": "Java",
+        "skills": ["POO", "APIs Java", "JDBC", "Integração Java"]
+      },
+      {
+        "nome": "Outros",
+        "skills": ["APIs REST", "OpenAPI", "Swagger"]
+      }
+    ]
+  },
+  {
+    "categoria": "Data",
+    "skills": [
+      "PostgreSQL",
+      "MySQL",
+      "SQLite",
+      "Oracle",
+      "MongoDB",
+      "Power BI"
+    ]
+  },
+  {
+    "categoria": "DevOps",
+    "skills": [
+      "Netlify",
+      "Render",
+      "Vercel",
+      "Railway",
+      "Git",
+      "GitHub",
+      "GitHub Actions",
+      "Supabase",
+      "Firebase",
+      "Docker",
+      "AWS",
+      "Nginx",
+      "Cloudflare"
+    ]
+  },
+  {
+    "categoria": "Linguagens",
+    "skills": [
+      "Python",
+      "JavaScript",
+      "TypeScript",
+      "PHP",
+      "C#",
+      "Java",
+      "Dart",
+      "SQL"
+    ]
+  },
+  {
+    "categoria": "Ferramentas",
+    "skills": [
+      "Postman",
+      "Insomnia",
+      "DBeaver",
+      "MySQL Workbench",
+      "IntelliJ",
+      "PyCharm",
+      "Figma"
+    ]
+  },
+  {
+    "categoria": "Mobile",
+    "subgrupos": [
+      {
+        "nome": "React Native",
+        "skills": ["Expo"]
+      },
+      {
+        "nome": "Flutter",
+        "skills": ["Dart"]
+      }
+    ]
+  },
+  {
+    "categoria": "Inteligência Artificial (IA)",
+    "subgrupos": [
+      {
+        "nome": "APIs de IA",
+        "skills": ["OpenAI API", "Anthropic API"]
+      },
+      {
+        "nome": "Técnicas",
+        "skills": [
+          "Engenharia de Prompt",
+          "Modelos de geração (texto / imagem / dados)",
+          "Contexto dinâmico (histórico e embeddings)",
+          "Análise de linguagem (NLP)"
+        ]
+      },
+      {
+        "nome": "Aplicações",
+        "skills": [
+          "Automação inteligente",
+          "Assistentes personalizados",
+          "IA em sistemas"
+        ]
+      }
+    ]
+  },
+  {
+    "categoria": "Segurança",
+    "subgrupos": [
+      {
+        "nome": "Proteção e Monitoramento",
+        "skills": [
+          "Segurança em autenticação",
+          "Logging e monitoramento",
+          "Proteção de endpoints"
+        ]
+      },
+      {
+        "nome": "Pentest & Ethical Hacking",
+        "skills": [
+          "Linux básico",
+          "Reconhecimento e enumeração",
+          "Port scanning",
+          "Enumeração de serviços web",
+          "Netcat",
+          "SSH",
+          "Exploração web",
+          "Escalação de privilégios",
+          "Pós-exploração",
+          "Cracking de senhas"
+        ]
+      },
+      {
+        "nome": "Ferramentas de Segurança",
+        "skills": ["Burp Suite"]
+      }
+    ]
+  }
+]

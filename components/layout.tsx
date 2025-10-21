@@ -172,7 +172,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 2.4, duration: 0.8 }}
-          className='fixed left-3 top-1/2 -translate-y-1/2 z-20 flex flex-col flex rounded-full bg-white dark:bg-sidebar text-sm font-medium text-base-800 shadow-[5px_0_20px_rgba(0,0,0,0.15)] shadow-base-800/5 dark:shadow-gray-600 h-3/10 px-2 py-3 justify-around items-center'
+          className='fixed left-3 top-1/2 -translate-y-1/2 z-10000 flex flex-col flex rounded-full bg-white dark:bg-sidebar text-sm font-medium text-base-800 shadow-[5px_0_20px_rgba(0,0,0,0.15)] shadow-base-800/5 dark:shadow-gray-600 h-3/10 px-2 py-3 justify-around items-center'
         >
 
           <ContextMenu>
@@ -195,7 +195,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         </motion.div>
         <header
-          className={`fixed top-0 z-20 w-full flex justify-center pt-4 transition-transform duration-300 translate-y-0`}
+          className={`fixed top-0 z-10000 w-full flex justify-center pt-4 transition-transform duration-300 translate-y-0`}
         >
           <motion.div
             initial={{ opacity: 0, y: -50 }}

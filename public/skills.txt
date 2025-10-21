@@ -8,8 +8,9 @@ Design e consumo de APIs REST — Endpoints CRUD, autenticação, versionamento,
 POO em Java e Python — aplicação prática de herança, polimorfismo, encapsulamento e abstração em projetos reais.
 
 Frontend
-React / Next.js / Vue.js (NextUI, Shadcn, Radix UI)
+React / Next.js / Vue.js / Angular (NextUI, Shadcn, Radix UI)
 Uteis (TailwindCSS, jQuery, Bootstrap)
+js ts
 
 Mobile
 React Native (Expo)
@@ -22,11 +23,16 @@ Power BI
 
 DevOps / Infra & Deploy
 PM2 / processos Node
-Netlify / Render / Vercel (Deploy completo)
+Netlify / Render / Vercel / Railway (Deploy completo)
 Git / GitHub / GitHub Actions
 Supabase / Firebase (Auth & DB)
 Hospedagem completa — experiência em publicação e manutenção de backend, frontend, banco de dados e aplicações mobile.
 Servidores IIS (Windows Server) — configuração, deploy e gerenciamento de aplicações web.
+Docker
+AWS
+CI/CD
+Ngnix
+Cloudflare
 
 Segurança da Informação & Ethical Hacking
 Segurança em autenticação
@@ -65,6 +71,9 @@ Extras
 Postman / Insomnia
 DBeaver / pgAdmin / MySQL Workbench
 Burp Suite
+IntelliJ
+Pycharm
+Figma
 
 Boas práticas / Soft skills técnicas
 Testes e validação — Unit tests, testes de integração e validação de inputs.
