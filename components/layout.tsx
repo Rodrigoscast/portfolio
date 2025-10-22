@@ -166,7 +166,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-full bg-gray-100 dark:bg-sidebar text-gray-800 dark:text-gray-100 w-full">
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={3000} className='!z-999999' />
       <div className="flex-1 flex flex-col">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -201,12 +201,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.4, duration: 0.8 }}
-            className="flex rounded-full text-sm font-medium bg-white dark:bg-sidebar shadow-[0_5px_20px_rgba(0,0,0,0.1)] shadow-base-800/5 dark:shadow-gray-600 w-2/5 px-5 py-3 justify-around"
+            className="flex rounded-full text-sm font-medium bg-white dark:bg-sidebar shadow-[0_5px_20px_rgba(0,0,0,0.1)] shadow-base-800/5 dark:shadow-gray-600 w-2/5 px-3 py-2 justify-around"
           >
 
             <div
               onClick={() => scrollToSection("home")}
-              className={`transition-all duration-200 ease-in-out p-3 rounded-full cursor-pointer flex items-center justify-center ${
+              className={`transition-all duration-200 ease-in-out py-1 rounded-full cursor-pointer flex items-center justify-center ${
                   activeSection === "home"
                     ? "scale-125 text-blue-500 dark:text-blue-300"
                     : "hover:scale-110 hover:rotate-15"
@@ -217,7 +217,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
             <div
               onClick={() => scrollToSection("code")}
-              className={`transition-all duration-200 ease-in-out p-3 rounded-full cursor-pointer flex items-center justify-center ${
+              className={`transition-all duration-200 ease-in-out py-1 rounded-full cursor-pointer flex items-center justify-center ${
                   activeSection === "code"
                     ? "scale-125 text-blue-500 dark:text-blue-300"
                     : "hover:scale-110 hover:rotate-15"
@@ -228,7 +228,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
             <div
               onClick={() => scrollToSection("projects")}
-              className={`transition-all duration-200 ease-in-out p-3 rounded-full cursor-pointer flex items-center justify-center ${
+              className={`transition-all duration-200 ease-in-out py-1 rounded-full cursor-pointer flex items-center justify-center ${
                   activeSection === "projects"
                     ? "scale-125 text-blue-500 dark:text-blue-300"
                     : "hover:scale-110 hover:rotate-15"
@@ -239,7 +239,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
             <div
               onClick={() => scrollToSection("contact")}
-              className={`transition-all duration-200 ease-in-out p-3 rounded-full cursor-pointer flex items-center justify-center ${
+              className={`transition-all duration-200 ease-in-out py-1 rounded-full cursor-pointer flex items-center justify-center ${
                   activeSection === "contact"
                     ? "scale-125 text-blue-500 dark:text-blue-300"
                     : "hover:scale-110 hover:rotate-15"
@@ -250,7 +250,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
             <div
               onClick={() => scrollToSection("music")}
-              className={`transition-all duration-200 ease-in-out p-3 rounded-full cursor-pointer flex items-center justify-center ${
+              className={`transition-all duration-200 ease-in-out py-1 rounded-full cursor-pointer flex items-center justify-center ${
                   activeSection === "music"
                     ? "scale-125 text-blue-500 dark:text-blue-300"
                     : "hover:scale-110 hover:rotate-15"

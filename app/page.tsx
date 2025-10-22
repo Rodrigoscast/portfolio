@@ -10,6 +10,9 @@ import { motion } from "framer-motion";
 import { useInView } from "@/hooks/useInView";
 import AnimatedBorder from "@/components/AnimatedBorder";
 import Tecnologias from "@/components/tecnologias";
+import Projetos from "@/components/Projetos";
+import FaleComigo from "@/components/FaleComigo";
+import MusicPlayer from "@/components/MusicPlayer";
 
 import github from "@/public/icons/github.json";
 import githubDark from "@/public/icons/github-dark.json";
@@ -215,7 +218,7 @@ export default function Home() {
         </section>
 
         <section
-          className="text-foreground flex items-center justify-center h-[calc(100vh-4.5rem)]"
+          className="text-foreground flex items-center justify-center min-h-screen"
           id="code"
         >
           <div className="w-full h-full" >
@@ -224,24 +227,30 @@ export default function Home() {
         </section>
 
         <section
-          className="text-foreground flex items-center justify-center h-[calc(100vh-4.5rem)]"
+          className="text-foreground flex items-center justify-center min-h-screen"
           id="projects"
         >
-          <h1>Página 3</h1>
+          <div className="w-full h-full" >
+            <Projetos visivel={isVisible} ref={ref} />
+          </div>
         </section>
 
         <section
-          className="text-foreground flex items-center justify-center h-[calc(100vh-4.5rem)]"
+          className="text-foreground flex items-center justify-center min-h-screen"
           id="contact"
         >
-          <h1>Página 4</h1>
+          <div className="w-full h-full" >
+            <FaleComigo visivel={isVisible} ref={ref} />
+          </div>
         </section>
 
         <section
-          className="text-foreground flex items-center justify-center h-[calc(100vh-4.5rem)]"
+          className="text-foreground flex items-center justify-center min-h-screen"
           id="music"
         >
-          <h1>Página 5</h1>
+          <div className="w-full h-full" >
+            <MusicPlayer visivel={isVisible} ref={ref} />
+          </div>
         </section>
       </ScrollArea>
     </main>

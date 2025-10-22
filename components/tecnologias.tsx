@@ -66,17 +66,44 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
         { nome: "Segurança", ref: lottieRefsecu, light: seguranca, dark: segurancaDark },
     ];
 
-    const Render = () => (
-        <img src="./biblioteca-icons/render.png" alt="Render" className="w-15 h-15"  />
-    )
-    
     useEffect(() => {
         setSkills(skillsData);
         setBiblioteca(bibliotecaData);
     }, []);
 
+    const Render = () => (
+        <img src="./biblioteca-icons/render.png" alt="Render" className="w-15 h-15" />
+    )
+    const FastAPI = () => (
+        <img src="./biblioteca-icons/fastapi.png" alt="Fast API" className="w-10 h-10" />
+    )
+    const SimpleGUI = () => (
+        <img src="./biblioteca-icons/pysimplegui.png" alt="Py Simple GUI" className="w-10 h-10" />
+    )
+    const Outros = () => (
+        <img src="./biblioteca-icons/outros.png" alt="Outros" className="w-10 h-10" />
+    )
+    const APIsREST = () => (
+        <img src="./biblioteca-icons/apirest.png" alt="API REST" className="w-10 h-10" />
+    )
+    const Tecnicas = () => (
+        <img src="./biblioteca-icons/tecnicas.png" alt="Tecnicas" className="w-10 h-10" />
+    )
+    const Aplicacoes = () => (
+        <img src="./biblioteca-icons/aplicacoes.png" alt="Aplicações" className="w-10 h-10" />
+    )
+    const Protecao = () => (
+        <img src="./biblioteca-icons/protecao.png" alt="Proteção" className="w-10 h-10" />
+    )
+    const Pentest = () => (
+        <img src="./biblioteca-icons/pentest.png" alt="Pentest" className="w-10 h-10" />
+    )
+    const Sistemas = () => (
+        <img src="./biblioteca-icons/sistemas.png" alt="Sistemas Operacionais" className="w-10 h-10" />
+    )
+
     const CustomIcons: Record<string, React.FC> = {
-        Render
+        Render, FastAPI, SimpleGUI, Outros, APIsREST, Tecnicas, Aplicacoes, Protecao, Pentest, Sistemas
     };
 
     let delay = 0.6
@@ -163,13 +190,13 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                         <motion.div
                             key="detalhe"
                             layout
-                            className="flex flex-col items-center justify-center gap-6"
+                            className="flex flex-col items-center justify-center gap-6 w-full"
                         >
                             <motion.div
                                 layoutId={selecionado}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.1 }}
-                                className="flex flex-wrap justify-center items-center gap-10 w-full py-10"
+                                className={`flex justify-center items-center gap-10 w-full py-10 ${skillsData.find((x) => x.categoria === selecionado)?.skills ? 'flex-wrap' : selecionado == 'Backend' || selecionado == 'IA' || selecionado == 'Segurança' ? 'flex-wrap px-6' : 'flex-row'}`}
                                 transition={{
                                     duration: 0.6,
                                     type: "spring",
@@ -201,9 +228,9 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                                         <Icone />
                                                     ) : (
                                                         <img
-                                                        className="w-15 h-15"
-                                                        src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${valor}`}
-                                                        alt={item}
+                                                            className="w-15 h-15"
+                                                            src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${valor}`}
+                                                            alt={item}
                                                         />
                                                     )}
                                                     <span>{item}</span>
@@ -215,52 +242,99 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                     skillsData
                                         .find((x) => x.categoria === selecionado)
                                         ?.subgrupos?.map((sub, i) => {
-
                                             const valor = biblioteca[sub.nome];
                                             if (!valor) return null;
 
                                             const isComponente = valor.startsWith("***");
                                             const nomeIcone = valor.replaceAll("*", "");
+                                            const Icone = CustomIcons[nomeIcone] || null;
 
-                                            // tenta achar nos dois lugares
-                                            const Icone =
-                                                CustomIcons[nomeIcone] || null;
+                                            // gera cores únicas pros blocos (pode personalizar)
+                                            const bgColors = [
+                                                "from-indigo-500/10 to-indigo-800/10",
+                                                "from-emerald-500/10 to-emerald-800/10",
+                                                "from-rose-500/10 to-rose-800/10",
+                                                "from-amber-500/10 to-amber-800/10",
+                                                "from-sky-500/10 to-sky-800/10",
+                                            ];
+                                            const bgClass = bgColors[i % bgColors.length];
 
                                             return (
-                                                <div key={i} className="mb-4">
-                                                    <h3 className="font-semibold mb-2">{sub.nome}</h3>
-                                                    <div className="flex flex-wrap gap-2">
+                                                <motion.div
+                                                    key={i}
+                                                    layout
+                                                    className={`
+                                                        ${selecionado == "IA" || selecionado == "Segurança" ? 'min-h-50 max-w-4/10' : selecionado == "Mobile" ? 'min-w-3/10' : ''}
+                                                        flex-col
+                                                        flex gap-4
+                                                        items-start
+                                                        rounded-2xl p-6 m-2
+                                                        bg-gradient-to-br ${bgClass} 
+                                                        border border-border shadow-lg
+                                                        transition-all duration-300 hover:shadow-xl
+                                                    `}
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        {isComponente && Icone ? (
+                                                            <Icone />
+                                                        ) : (
+                                                            <img
+                                                                className="w-8 h-8"
+                                                                src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${valor}`}
+                                                                alt={sub.nome}
+                                                            />
+                                                        )}
+                                                        <h3 className="font-semibold text-lg flex flex-col">{sub.nome}</h3>
+                                                    </div>
+
+                                                    <div className={`flex flex-wrap gap-4 justify-center w-full`}>
                                                         {sub.skills.map((skill: string, j: number) => {
-                                                            const valorSkill = biblioteca[skill];
-                                                            if (!valorSkill) return null;
 
-                                                            const isComponenteSkill = valorSkill.startsWith("***");
-                                                            const nomeIconeSkill = valorSkill.replaceAll("*", "");
+                                                            if(selecionado == "IA" || selecionado == "Segurança"){
 
-                                                            // tenta achar nos dois lugares
-                                                            const IconeSkill =
-                                                                CustomIcons[nomeIconeSkill] || null;
-                                                            return(
-                                                                <div
-                                                                    key={j}
-                                                                    className="w-30 h-30 text-sm rounded-full bg-input dark:bg-input shadow-lg flex flex-col items-center justify-center gap-2"
-                                                                >
-                                                                    {isComponenteSkill && IconeSkill ? (
-                                                                        <IconeSkill />
-                                                                    ) : (
-                                                                        <img
-                                                                            className="w-15 h-15"
-                                                                            src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${valorSkill}`}
-                                                                            alt={skill}
-                                                                        />
-                                                                    )}
-                                                                    <span>{skill}</span>
-                                                                </div>
-                                                            )
+                                                                return (
+                                                                    <div
+                                                                        key={j}
+                                                                        className="px-4 py-2 text-xs rounded-xl bg-background/60 dark:bg-muted
+                                                                            shadow-md flex flex-col items-center justify-center gap-2
+                                                                            hover:shadow-xl hover:scale-105 transition-transform"
+                                                                    >
+                                                                        <span className="text-center">{skill}</span>
+                                                                    </div>
+                                                                );
+
+                                                            } else {
+                                                                const valorSkill = biblioteca[skill];
+                                                                if (!valorSkill) return null;                                                         
+
+                                                                const isComponenteSkill = valorSkill.startsWith("***");
+                                                                const nomeIconeSkill = valorSkill.replaceAll("*", "");
+                                                                const IconeSkill = CustomIcons[nomeIconeSkill] || null;
+
+                                                                return (
+                                                                    <div
+                                                                        key={j}
+                                                                        className="w-28 h-28 text-xs rounded-xl bg-background/60 dark:bg-muted
+                                                                            shadow-md flex flex-col items-center justify-center gap-2
+                                                                            hover:shadow-xl hover:scale-105 transition-transform"
+                                                                    >
+                                                                        {isComponenteSkill && IconeSkill ? (
+                                                                            <IconeSkill />
+                                                                        ) : (
+                                                                            <img
+                                                                                className="w-10 h-10"
+                                                                                src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${valorSkill}`}
+                                                                                alt={skill}
+                                                                            />
+                                                                        )}
+                                                                        <span className="text-center">{skill}</span>
+                                                                    </div>
+                                                                );
+                                                            }
                                                         })}
                                                     </div>
-                                                </div>
-                                            )
+                                                </motion.div>
+                                            );
                                         })
                                 )}
 

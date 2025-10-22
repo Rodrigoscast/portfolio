@@ -45,7 +45,7 @@
       },
       {
         "nome": "Java",
-        "skills": ["POO", "APIs Java", "JDBC", "Integração Java"]
+        "skills": ["Spring", "POO", "JDBC"]
       },
       {
         "nome": "Outros",
@@ -104,7 +104,8 @@
       "MySQL Workbench",
       "IntelliJ",
       "PyCharm",
-      "Figma"
+      "Figma",
+      "Burp Suite"
     ]
   },
   {
@@ -121,7 +122,7 @@
     ]
   },
   {
-    "categoria": "Inteligência Artificial (IA)",
+    "categoria": "IA",
     "subgrupos": [
       {
         "nome": "APIs de IA",
@@ -159,22 +160,25 @@
       },
       {
         "nome": "Pentest & Ethical Hacking",
-        "skills": [
-          "Linux básico",
+        "skills": [          
           "Reconhecimento e enumeração",
           "Port scanning",
-          "Enumeração de serviços web",
-          "Netcat",
           "SSH",
           "Exploração web",
           "Escalação de privilégios",
           "Pós-exploração",
-          "Cracking de senhas"
+          "Fundamentos de Cracking"
         ]
       },
       {
-        "nome": "Ferramentas de Segurança",
-        "skills": ["Burp Suite"]
+        "nome": "Sistemas Operacionais",
+        "skills": [
+          "Linux Intermediário",
+          "Windows Avançado",
+          "Windows Server",
+          "Bash Script",
+          "Powershell"
+        ]
       }
     ]
   }
