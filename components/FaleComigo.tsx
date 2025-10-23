@@ -58,11 +58,11 @@ export default function FaleComigo({
         <motion.div
             ref={ref}
             initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="w-full max-w-lg mx-auto flex flex-col gap-6 bg-card border border-border p-8 rounded-2xl shadow-lg mt-10"
         >
-            <h2 className="text-2xl font-bold text-center">💬 Fale Comigo</h2>
+            <h2 className="text-2xl font-bold text-center">💬 Entre em contato </h2>
 
             <Input
                 placeholder="Seu nome"
@@ -87,7 +87,7 @@ export default function FaleComigo({
             <Button
                 onClick={enviarEmail}
                 disabled={loading}
-                className="w-full text-md py-5"
+                className="w-full text-md py-5 cursor-pointer"
             >
                 {loading ? "Enviando..." : "Enviar mensagem"}
             </Button>

@@ -48,7 +48,7 @@ export async function GET(req: Request) {
 
     if (!geoData || geoData.status !== "success") {
       return NextResponse.json(
-        { erro: `Não foi possível determinar a localização do IP http://ip-api.com/json/${ip}` },
+        { erro: `Não foi possível determinar a localização do IP` },
         { status: 400 }
       );
     }

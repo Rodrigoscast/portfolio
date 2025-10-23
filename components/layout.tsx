@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useTheme } from "next-themes";
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
@@ -14,6 +15,12 @@ import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import CassetteModel from "@/components/CassetteModel";
 import { Button } from '@/components/ui/button';
+import { useLanguage } from "@/contexts/LanguageContext";
+import Lottie, { LottieRefCurrentProps } from "lottie-react";
+import kameHover from "@/public/icons/kame-hover.json";
+import kameReveal from "@/public/icons/kame-reveal.json";
+import glasses from "@/public/icons/linguagem.json";
+import glassesDark from "@/public/icons/linguagemDark.json";
 
 import {
   ContextMenu,
@@ -31,6 +38,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     tema: "",
     language: ""
   });
+  const { theme, systemTheme } = useTheme();
+  const currentTheme = theme === "system" ? systemTheme : theme;
+  const isDark = currentTheme === "dark";
+
+  const lottieRefhover = useRef<LottieRefCurrentProps>(null);
+  const lottieRefrevea = useRef<LottieRefCurrentProps>(null);
+  const lottieRefglass = useRef<LottieRefCurrentProps>(null);
+
+  const { sequence, setSequence } = useLanguage();
 
   const secretCode = [
     "arrowup",
@@ -44,7 +60,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     "b",
     "a",
   ];
-  const [sequence, setSequence] = useState<string[]>([]);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -172,11 +187,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 2.4, duration: 0.8 }}
-          className='fixed left-3 top-1/2 -translate-y-1/2 z-10000 flex flex-col flex rounded-full bg-white dark:bg-sidebar text-sm font-medium text-base-800 shadow-[5px_0_20px_rgba(0,0,0,0.15)] shadow-base-800/5 dark:shadow-gray-600 h-3/10 px-2 py-3 justify-around items-center'
+          className='fixed left-3 top-1/2 -translate-y-1/2 z-10000 flex flex-col flex rounded-full bg-white dark:bg-sidebar text-sm font-medium text-base-800 shadow-[5px_0_20px_rgba(0,0,0,0.15)] shadow-base-800/5 dark:shadow-gray-600 h-11/20 px-2 py-3 justify-around items-center'
         >
 
           <ContextMenu>
-            <ContextMenuTrigger>
+            <ContextMenuTrigger title='Mudar Tema'>
               <ThemeToggle />
             </ContextMenuTrigger>
             <ContextMenuContent>
@@ -185,13 +200,51 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </ContextMenu>
 
           <ContextMenu>
-            <ContextMenuTrigger>
+            <ContextMenuTrigger title='Mudar Idioma'>
               <LanguageSwitch />
             </ContextMenuTrigger>
             <ContextMenuContent>
               <CodeCard code={code.language} />
             </ContextMenuContent>
           </ContextMenu>
+
+          <div
+            className='border-1 shadow-lg bg-input rounded-full w-[2.5em] cursor-pointer'
+            title='IA Kame'
+            onMouseEnter={() => lottieRefhover.current?.play()}
+            onMouseLeave={() => {
+                lottieRefhover.current?.stop();
+                lottieRefhover.current?.goToAndStop(0, true);
+            }}
+          >
+            <Lottie
+              lottieRef={lottieRefhover}
+              animationData={kameHover}
+              loop={true}
+              autoplay={false}
+              style={{ width: 33, height: 60 }}
+              className='scale-140'
+            />
+          </div>
+
+          <div
+            className='border-1 shadow-lg bg-input rounded-full w-[2.5em] cursor-pointer'
+            title='Modo Dev'
+            onMouseEnter={() => lottieRefglass.current?.play()}
+            onMouseLeave={() => {
+                lottieRefglass.current?.stop();
+                lottieRefglass.current?.goToAndStop(0, true);
+            }}
+          >
+            <Lottie
+              lottieRef={lottieRefglass}
+              animationData={isDark ? glassesDark : glasses}
+              loop={true}
+              autoplay={false}
+              style={{ width: 33, height: 60 }}
+              className='scale-100'
+            />
+          </div>
 
         </motion.div>
         <header
@@ -266,7 +319,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </div>
       {tape && (
         <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-black/60"
+          className="fixed inset-0 z-[999999] flex items-center justify-center backdrop-blur-sm bg-black/60"
         >
           <Canvas camera={{ position: [0, 1.5, 6], fov: 50 }}>
             <ambientLight intensity={0.5} />
@@ -279,7 +332,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       
       {doom && (
         <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-black/60"
+          className="fixed inset-0 z-[999999] flex items-center justify-center backdrop-blur-sm bg-black/60"
         >
           <h1>Rodando Doom</h1>
           <Button 
@@ -288,7 +341,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             onClick={() => setDoom(false)} 
             className='cursor-pointer absolute top-10 right-10'
           >
-            <X className='!w-8 !h-8'/>
+            <X className='!w-8 !h-8' />
           </Button>
         </div>
       )}
