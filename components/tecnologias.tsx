@@ -106,7 +106,7 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
         Render, FastAPI, SimpleGUI, Outros, APIsREST, Tecnicas, Aplicacoes, Protecao, Pentest, Sistemas
     };
 
-    let delay = 0.6
+    let delay = 0.3
 
     return (
         <motion.div ref={ref} className="flex flex-col w-full items-center justify-start min-h-screen p-10 pt-10 overflow-hidden">

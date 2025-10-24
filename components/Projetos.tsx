@@ -96,7 +96,7 @@ export default function Projetos({
                             stiffness: 120,
                         }}
                         onClick={() => {setProjetoSelecionado(proj); setModalProjeto(true)}}
-                        className="cursor-pointer bg-card border border-border rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 ease-in-out flex flex-col hover:scale-105"
+                        className="cursor-pointer bg-card border border-border rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 ease-out flex flex-col hover:scale-105"
                     >
                         {/* Imagem do projeto */}
                         <div className="relative w-full h-56 overflow-hidden group">

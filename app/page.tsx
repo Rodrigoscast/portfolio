@@ -3,8 +3,13 @@
 import { useEffect, useState, useRef } from "react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useClima } from "@/hooks/useClima";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
-import { MapPin, ChevronLeft, ArrowLeft, ArrowRight, ArrowUp, ArrowDown } from "lucide-react";
+import {
+  MapPin, ChevronLeft, ArrowLeft, ArrowRight, ArrowUp, ArrowDown,
+  Play, Pause, SkipBack, SkipForward, Sun, CloudRain,
+  Cloud, CloudLightning, Snowflake
+} from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion } from "framer-motion";
 import { useInView } from "@/hooks/useInView";
@@ -12,7 +17,6 @@ import AnimatedBorder from "@/components/AnimatedBorder";
 import Tecnologias from "@/components/tecnologias";
 import Projetos from "@/components/Projetos";
 import FaleComigo from "@/components/FaleComigo";
-import InfoArea from "@/components/MusicPlayer";
 
 import github from "@/public/icons/github.json";
 import githubDark from "@/public/icons/github-dark.json";
@@ -20,6 +24,7 @@ import linkedin from "@/public/icons/linkedin.json";
 import linkedinDark from "@/public/icons/linkedin-dark.json";
 import docs from "@/public/icons/docs.json";
 import docsDark from "@/public/icons/docs-dark.json";
+import { Card, CardContent } from "@/components/ui/card";
 
 import { TypeAnimation } from 'react-type-animation';
 
@@ -27,7 +32,15 @@ export default function Home() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const { theme, systemTheme } = useTheme();
   const { lang, sequence } = useLanguage();
-  const { ref, isVisible } = useInView(0.2);
+  const { clima, erro, loading, dataHora } = useClima();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const { ref: refTech, isVisible: techVisible } = useInView(0.2);
+  const { ref: refProj, isVisible: projVisible } = useInView(0.2);
+  const { ref: refContato, isVisible: contatoVisible } = useInView(0.2);
+
   const [dica, setDica] = useState(false)
 
   const lottieRefGit = useRef<LottieRefCurrentProps>(null);
@@ -40,6 +53,55 @@ export default function Home() {
 
   const current = theme === "system" ? systemTheme : theme;
   const isDark = current === "dark";
+
+  const tracks = [
+    { title: "LoFi Dreams", artist: "Chill Beats", src: "/music/lofi1.mp3" },
+    { title: "Coding Flow", artist: "Zen Mode", src: "/music/lofi2.mp3" },
+    { title: "Deep Focus", artist: "Mindstate", src: "/music/lofi3.mp3" },
+  ];
+
+  const playTrack = (index: number) => {
+    setCurrentIndex(index);
+    setIsPlaying(true);
+    if (audioRef.current) {
+      audioRef.current.src = tracks[index].src;
+      audioRef.current.play();
+    }
+  };
+
+  const togglePlay = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const nextTrack = () => {
+    const next = (currentIndex + 1) % tracks.length;
+    playTrack(next);
+  };
+
+  const prevTrack = () => {
+    const prev = (currentIndex - 1 + tracks.length) % tracks.length;
+    playTrack(prev);
+  };
+
+  const getWeatherIcon = () => {
+    if (!clima?.descricao) return <img src="/gifs/sol.png" alt="Ensolarado" className="w-10 h-10"/>;
+
+    const desc = clima.descricao.toLowerCase();
+    if (desc.includes("garoa") || desc == 'Chuva leve' || desc == 'Chuva moderada') return <img src="/gifs/chuva.png" alt="Garoa e Chuva leve" className="w-10 h-10"/>;
+    if (desc.includes("pancadas") || desc.includes("chuva")) return <img src="/gifs/chuva-forte.png" alt="Chuva Forte" className="w-10 h-10"/>;
+    if (desc == "Trovoadas com granizo grande") return <img src="/gifs/granizo.png" alt="Granizo" className="w-10 h-10"/>;
+    if (desc.includes("trovoadas")) return <img src="/gifs/tempestade.png" alt="Trovoada" className="w-10 h-10"/>;
+    if (desc.includes("neve")) return <img src="/gifs/neve.png" alt="Neve" className="w-10 h-10"/>;
+    if (desc.includes("nublado")) return <img src="/gifs/nublado.png" alt="Nublado" className="w-10 h-10"/>;
+    if (desc == "Neblina" || desc == "Névoa") return <img src="/gifs/nevoa.png" alt="Neblina" className="w-10 h-10"/>;
+    return <img src="/gifs/sol.png" alt="Ensolarado" className="w-10 h-10"/>;
+  };
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -236,7 +298,7 @@ export default function Home() {
           id="code"
         >
           <div className="w-full h-full" >
-            <Tecnologias visivel={isVisible} ref={ref} />
+            <Tecnologias visivel={techVisible} ref={refTech} />
           </div>
         </section>
 
@@ -245,7 +307,7 @@ export default function Home() {
           id="projects"
         >
           <div className="w-full h-full" >
-            <Projetos visivel={isVisible} ref={ref} />
+            <Projetos visivel={projVisible} ref={refProj} />
           </div>
         </section>
 
@@ -254,11 +316,14 @@ export default function Home() {
           id="contact"
         >
           <div className="w-full h-full" >
-            <FaleComigo visivel={isVisible} ref={ref} />
+            <FaleComigo visivel={contatoVisible} ref={refContato} />
           </div>
-          <div
-            ref={refSecret} 
-            className={`absolute ${dica ? 'w-70' : 'w-10'} right-0 bottom-12 transition-all duration-300 ease-in-out`}
+          <motion.div
+            ref={refSecret}
+            initial={{ opacity: 0, x: 30 }}
+            animate={contatoVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
+            transition={{ delay: 2, duration: 0.6, ease: "easeOut" }}
+            className={`absolute ${dica ? 'w-70' : 'w-10'} right-0 bottom-25 transition-all duration-300 ease-in-out z-10`}
           >
             <div className="bg-[#FAEDCF] dark:bg-[#3F2F07] rounded-l-lg p-2 flex flex-row cursor-pointer" onClick={() => setDica(!dica)}>
               <ChevronLeft className={`${dica && 'rotate-180'} transition-all duration-300 ease-in-out`} />
@@ -275,22 +340,77 @@ export default function Home() {
                     <ArrowLeft size={12} className={`${sequence.length >= 7 && ('text-green-400')}`} />
                     <ArrowRight size={12} className={`${sequence.length >= 8 && ('text-green-400')}`} />
                     <p className={`${sequence.length >= 9 ? 'text-green-400 border-green-400' : 'border-black'} text-[11px] border-1 rounded-full w-3.5 h-3.5 flex items-center justify-center`}>B</p>
-                    <p className={`${sequence.length >= 10 ? 'text-green-400 border-green-400': 'border-black'} text-[11px] border-1 border-black rounded-full w-3.5 h-3.5 flex items-center justify-center`}>A</p>
+                    <p className={`${sequence.length >= 10 ? 'text-green-400 border-green-400' : 'border-black'} text-[11px] border-1 border-black rounded-full w-3.5 h-3.5 flex items-center justify-center`}>A</p>
                   </div>
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
         </section>
 
-        <section
-          className="text-foreground flex items-center justify-center h-[90vh]"
-          id="music"
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="flex flex-col items-center justify-center text-foreground px-6 absolute bottom-0 right-14"
         >
-          <div className="w-full h-full" >
-            <InfoArea />
-          </div>
-        </section>
+          {loading ? (
+            <div>Carregando...</div>
+          ) : erro ? (
+            <div>{erro}</div>
+          ) : (
+            <>
+              <Card className="bg-card/60 border-border w-full max-w-md shadow-xl rounded-2xl backdrop-blur-md p-6 text-center">
+                <CardContent className="flex flex-col items-center gap-4">
+                  {/* 🌦 Ícone + clima */}
+                  {getWeatherIcon()}
+                  <h2 className="text-2xl font-bold mt-2">{clima.descricao}</h2>
+                  <p className="text-muted-foreground">
+                    {clima.cidade} - {clima.estado}, {clima.pais}
+                  </p>
+                  <p className="text-4xl font-semibold">{clima.temperatura}°C</p>
+
+                  {/* ⏰ Data/Hora estilizada */}
+                  <p className="mt-3 text-lg font-light text-muted-foreground">{dataHora.data}</p>
+                  <p className="text-5xl tracking-widest text-amber-400 font-extralight">{dataHora.hora}</p>
+
+                  {/* 🎶 Player */}
+                  <div className="mt-6 flex flex-col items-center gap-3">
+                    <p className="text-sm text-muted-foreground">
+                      {tracks[currentIndex].title} — {tracks[currentIndex].artist}
+                    </p>
+                    <div className="flex gap-6 items-center">
+                      <button
+                        onClick={prevTrack}
+                        className="p-2 hover:scale-110 transition-transform"
+                        title="Anterior"
+                      >
+                        <SkipBack />
+                      </button>
+
+                      <button
+                        onClick={togglePlay}
+                        className="p-3 bg-amber-400 rounded-full hover:scale-110 transition-transform shadow-md"
+                        title={isPlaying ? "Pausar" : "Tocar"}
+                      >
+                        {isPlaying ? <Pause className="text-background" /> : <Play className="text-background ml-1" />}
+                      </button>
+
+                      <button
+                        onClick={nextTrack}
+                        className="p-2 hover:scale-110 transition-transform"
+                        title="Próxima"
+                      >
+                        <SkipForward />
+                      </button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <audio ref={audioRef} onEnded={nextTrack} preload="auto" />
+            </>
+          )}
+        </motion.div>
       </ScrollArea>
     </main>
   );

@@ -17,6 +17,7 @@ import CassetteModel from "@/components/CassetteModel";
 import { Button } from '@/components/ui/button';
 import { useLanguage } from "@/contexts/LanguageContext";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
+
 import kameHover from "@/public/icons/kame-hover.json";
 import kameReveal from "@/public/icons/kame-reveal.json";
 import glasses from "@/public/icons/linguagem.json";
@@ -155,7 +156,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     if (!scrollContainer) return;
 
-    const sections = ["home", "code", "projects", "contact", "music"];
+    const sections = ["home", "code", "projects", "contact"];
 
     const handleScroll = () => {
       sections.forEach((id) => {
@@ -254,7 +255,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.4, duration: 0.8 }}
-            className="flex rounded-full text-sm font-medium bg-white dark:bg-sidebar shadow-[0_5px_20px_rgba(0,0,0,0.1)] shadow-base-800/5 dark:shadow-gray-600 w-2/5 px-3 py-2 justify-around"
+            className="flex rounded-full text-sm font-medium bg-white dark:bg-sidebar shadow-[0_5px_20px_rgba(0,0,0,0.1)] shadow-base-800/5 dark:shadow-gray-600 w-3/10 px-3 py-2 justify-around"
           >
 
             <div
@@ -300,18 +301,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             >
               <MessageSquareMoreIcon  />
             </div>
-
-            <div
-              onClick={() => scrollToSection("music")}
-              className={`transition-all duration-200 ease-in-out py-1 rounded-full cursor-pointer flex items-center justify-center ${
-                  activeSection === "music"
-                    ? "scale-125 text-blue-500 dark:text-blue-300"
-                    : "hover:scale-110 hover:rotate-15"
-                }`}
-            >
-              <Music />
-            </div>
-          </motion.div>
+          </motion.div>       
         </header>
         <main className='h-full'>
           {children}

@@ -57,40 +57,71 @@ export default function FaleComigo({
     return (
         <motion.div
             ref={ref}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            initial={{ opacity: 0, x: 80 }}
+            animate={visivel ? { opacity: 1, x: 0 } : { opacity: 0, x: 80 }}
+            transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
             className="w-full max-w-lg mx-auto flex flex-col gap-6 bg-card border border-border p-8 rounded-2xl shadow-lg mt-10"
         >
-            <h2 className="text-2xl font-bold text-center">💬 Entre em contato </h2>
-
-            <Input
-                placeholder="Seu nome"
-                value={form.nome}
-                onChange={(e) => setForm({ ...form, nome: e.target.value })}
-            />
-
-            <Input
-                type="email"
-                placeholder="Seu e-mail"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-            />
-
-            <Textarea
-                placeholder="Escreva sua mensagem..."
-                value={form.mensagem}
-                onChange={(e) => setForm({ ...form, mensagem: e.target.value })}
-                className="min-h-[120px]"
-            />
-
-            <Button
-                onClick={enviarEmail}
-                disabled={loading}
-                className="w-full text-md py-5 cursor-pointer"
+            <motion.h2 
+                initial={{ opacity: 0, scale: 0.2 }}
+                animate={visivel ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
+                transition={{ delay: 1, duration: 0.6, ease: "easeOut" }}
+                className="text-2xl font-bold text-center"
             >
-                {loading ? "Enviando..." : "Enviar mensagem"}
-            </Button>
+                💬 Entre em contato 
+            </motion.h2>
+
+            <motion.div
+                initial={{ opacity: 0, scale: 0.2 }}
+                animate={visivel ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
+                transition={{ delay: 1.2, duration: 0.6, ease: "easeOut" }}
+            >
+                <Input
+                    placeholder="Seu nome"
+                    value={form.nome}
+                    onChange={(e) => setForm({ ...form, nome: e.target.value })}
+                />
+            </motion.div>
+
+            <motion.div
+                initial={{ opacity: 0, scale: 0.2 }}
+                animate={visivel ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
+                transition={{ delay: 1.4, duration: 0.6, ease: "easeOut" }}
+            >
+                <Input
+                    type="email"
+                    placeholder="Seu e-mail"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+            </motion.div>
+
+            <motion.div
+                initial={{ opacity: 0, scale: 0.2 }}
+                animate={visivel ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
+                transition={{ delay: 1.6, duration: 0.6, ease: "easeOut" }}
+            >
+                <Textarea
+                    placeholder="Escreva sua mensagem..."
+                    value={form.mensagem}
+                    onChange={(e) => setForm({ ...form, mensagem: e.target.value })}
+                    className="min-h-[120px]"
+                />
+            </motion.div>
+
+            <motion.div
+                initial={{ opacity: 0, scale: 0.2 }}
+                animate={visivel ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
+                transition={{ delay: 1.8, duration: 0.6, ease: "easeOut" }}
+            >
+                <Button
+                    onClick={enviarEmail}
+                    disabled={loading}
+                    className="w-full text-md py-5 cursor-pointer"
+                >
+                    {loading ? "Enviando..." : "Enviar mensagem"}
+                </Button>
+            </motion.div>
         </motion.div>
     );
 }

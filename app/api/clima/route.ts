@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-// Tabela de códigos do Open-Meteo → descrição do clima
 const weatherDescriptions: Record<number, string> = {
   0: "Céu limpo",
   1: "Principalmente limpo",
@@ -34,28 +33,60 @@ const weatherDescriptions: Record<number, string> = {
 
 export async function GET(req: Request) {
   try {
-    // 1️⃣ Pega o IP do usuário
-    const ip =
-    process.env.NODE_ENV === "development"
-        ? "221.38.25.220"
-        : req.headers.get("x-forwarded-for")?.split(",")[0] ||
+    const { searchParams } = new URL(req.url);
+    const latParam = searchParams.get("lat");
+    const lonParam = searchParams.get("lon");
+
+    let lat = latParam;
+    let lon = lonParam;
+    let city = "";
+    let state = "";
+    let country = "";
+
+    //Se não tiver coordenadas, pega via IP
+    if (!lat || !lon) {
+      const ip =
+        process.env.NODE_ENV === "development"
+          ? "187.32.15.147"
+          : req.headers.get("x-forwarded-for")?.split(",")[0] ||
             req.headers.get("x-real-ip") ||
-            "auto";      
+            "auto";
 
-    // 2️⃣ Pega latitude e longitude usando ip-api.com
-    const geoRes = await fetch(`http://ip-api.com/json/${ip}`);
-    const geoData = await geoRes.json();
+      const geoRes = await fetch(`http://ip-api.com/json/${ip}`);
+      const geoData = await geoRes.json();
 
-    if (!geoData || geoData.status !== "success") {
-      return NextResponse.json(
-        { erro: `Não foi possível determinar a localização do IP` },
-        { status: 400 }
+      if (!geoData || geoData.status !== "success") {
+        return NextResponse.json(
+          { erro: `Não foi possível determinar a localização do IP` },
+          { status: 400 }
+        );
+      }
+
+      lat = geoData.lat;
+      lon = geoData.lon;
+      city = geoData.city;
+      state = geoData.region || ""; // ex: "SP"
+      country = geoData.country;
+    } else {
+      //Se vier lat/lon (usuário permitiu localização) → usa reverse geocoding
+      const reverseRes = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`,
+        { headers: { "User-Agent": "NextWeatherApp/1.0" } }
       );
+
+      const reverseData = await reverseRes.json();
+      const addr = reverseData.address || {};
+
+      city = addr.city || addr.town || addr.village || "";
+      state = addr.state_code || addr.state || "";
+      country = addr.country || "";
+      if (state.length > 2 && addr["ISO3166-2-lvl4"]) {
+        // Pega a sigla tipo "BR-SP"
+        state = addr["ISO3166-2-lvl4"].split("-")[1] || state;
+      }
     }
 
-    const { lat, lon, city, country } = geoData;
-
-    // 3️⃣ Chama o Open-Meteo para pegar o clima atual
+    //Consulta o Open-Meteo
     const weatherRes = await fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code`
     );
@@ -73,10 +104,10 @@ export async function GET(req: Request) {
     const temperatura = weatherData.current.temperature_2m;
     const descricao = weatherDescriptions[code] || "Clima desconhecido";
 
-    // 4️⃣ Retorna o resultado final
     return NextResponse.json({
-      cidade: city,
-      pais: country,
+      cidade: city || null,
+      estado: state || null,
+      pais: country || null,
       temperatura,
       descricao,
     });
