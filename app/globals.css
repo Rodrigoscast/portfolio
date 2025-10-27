@@ -45,6 +45,7 @@
 }
 
 :root {
+  font-family: var(--font-inter), sans-serif;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -82,6 +83,7 @@
 }
 
 .dark {
+  font-family: var(--font-inter), sans-serif;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -136,4 +138,77 @@ html {
 
 ::-webkit-scrollbar {
     width: 0px;
+}
+
+.font-exo {
+  font-family: var(--font-exo), sans-serif;
+}
+
+/* estilo base */
+input[type="range"] {
+  @apply appearance-none w-full h-1 bg-transparent;
+}
+
+/* trilha do slider */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    rgb(251 191 36) 0%,  /* amber-400 */
+    rgb(251 191 36) var(--fill-width, 50%),
+    rgb(63 63 70) var(--fill-width, 50%) /* zinc-700 fallback */
+  );
+}
+
+/* bolinha (thumb) */
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  height: 12px;
+  width: 12px;
+  border-radius: 9999px;
+  background: rgb(251 191 36); /* amber-400 */
+  margin-top: -4px; /* centraliza verticalmente */
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(251, 191, 36, 0.6);
+  transition: transform 0.2s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    rgb(251 191 36) 0%,
+    rgb(251 191 36) var(--fill-width, 50%),
+    rgb(63 63 70) var(--fill-width, 50%)
+  );
+}
+input[type="range"]::-moz-range-thumb {
+  height: 12px;
+  width: 12px;
+  border-radius: 9999px;
+  background: rgb(251 191 36);
+  cursor: pointer;
+}
+
+.bg-selecionado {
+  background-color: var(--gradient-glow-to);
+}
+
+@keyframes slow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-slow-spin {
+  animation: slow-spin 5s linear infinite;
 }

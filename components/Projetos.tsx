@@ -156,10 +156,8 @@ export default function Projetos({
                                     </span>
                                 ))}
                             </div>
-                            <DialogDescription>
-                                <p className="text-sm text-muted-foreground mb-6">
-                                    {projetoSelecionado.descricao}
-                                </p>
+                            <DialogDescription className="text-sm text-muted-foreground mb-6">
+                                {projetoSelecionado.descricao}
                             </DialogDescription>
                         </DialogHeader>
 

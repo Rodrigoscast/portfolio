@@ -16,7 +16,7 @@ export function useClima() {
 
       // Formata data e hora no estilo brasileiro
       const dataFormatada = agora.toLocaleDateString("pt-BR", {
-        weekday: "long",
+        weekday: "short",
         day: "2-digit",
         month: "long"
       });

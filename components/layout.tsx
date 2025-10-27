@@ -19,9 +19,11 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 
 import kameHover from "@/public/icons/kame-hover.json";
-import kameReveal from "@/public/icons/kame-reveal.json";
 import glasses from "@/public/icons/linguagem.json";
 import glassesDark from "@/public/icons/linguagemDark.json";
+
+import music from "@/public/icons/music.json"
+import musicDark from "@/public/icons/music-dark.json"
 
 import {
   ContextMenu,
@@ -44,10 +46,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const isDark = currentTheme === "dark";
 
   const lottieRefhover = useRef<LottieRefCurrentProps>(null);
-  const lottieRefrevea = useRef<LottieRefCurrentProps>(null);
+  const lottieRefmusic = useRef<LottieRefCurrentProps>(null);
   const lottieRefglass = useRef<LottieRefCurrentProps>(null);
+  
 
-  const { sequence, setSequence } = useLanguage();
+  const { sequence, setSequence, info, setInfo, kame, setKame } = useLanguage();
 
   const secretCode = [
     "arrowup",
@@ -188,7 +191,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 2.4, duration: 0.8 }}
-          className='fixed left-3 top-1/2 -translate-y-1/2 z-10000 flex flex-col flex rounded-full bg-white dark:bg-sidebar text-sm font-medium text-base-800 shadow-[5px_0_20px_rgba(0,0,0,0.15)] shadow-base-800/5 dark:shadow-gray-600 h-11/20 px-2 py-3 justify-around items-center'
+          className='fixed left-3 top-1/2 -translate-y-1/2 z-10000 flex flex-col flex rounded-full bg-white dark:bg-sidebar text-sm font-medium text-base-800 shadow-[5px_0_20px_rgba(0,0,0,0.15)] shadow-base-800/5 dark:shadow-gray-600 h-12/20 px-2 py-3 justify-around items-center'
         >
 
           <ContextMenu>
@@ -210,8 +213,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </ContextMenu>
 
           <div
-            className='border-1 shadow-lg bg-input rounded-full w-[2.5em] cursor-pointer'
+            className={`border-1 shadow-lg bg-input rounded-full w-[2.5em] cursor-pointer ignore-close-kame ${kame ? 'bg-selecionado' : 'bg-input'}`}
             title='IA Kame'
+            onClick={() => setKame((prev) => !prev)}
             onMouseEnter={() => lottieRefhover.current?.play()}
             onMouseLeave={() => {
                 lottieRefhover.current?.stop();
@@ -240,6 +244,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Lottie
               lottieRef={lottieRefglass}
               animationData={isDark ? glassesDark : glasses}
+              loop={true}
+              autoplay={false}
+              style={{ width: 33, height: 60 }}
+              className='scale-100'
+            />
+          </div>
+
+          <div
+            className={`border-1 shadow-lg ${info ? 'bg-selecionado' : 'bg-input'} rounded-full w-[2.5em] cursor-pointer ignore-close transition-all ease-in-out duration-300`}
+            title='Música e Infos'
+            onClick={() => setInfo((prev) => !prev)}
+            onMouseEnter={() => lottieRefmusic.current?.play()}
+            onMouseLeave={() => {
+                lottieRefmusic.current?.stop();
+                lottieRefmusic.current?.goToAndStop(0, true);
+            }}
+          >
+            <Lottie
+              lottieRef={lottieRefmusic}
+              animationData={isDark ? musicDark : music}
               loop={true}
               autoplay={false}
               style={{ width: 33, height: 60 }}

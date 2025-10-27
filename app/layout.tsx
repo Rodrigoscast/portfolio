@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Exo } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import Layout from "@/components/layout";
@@ -8,6 +9,13 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+const exo = Exo({
+  subsets: ["latin"],
+  variable: "--font-exo",
+  weight: ["400", "700"],
   display: "swap",
 });
 
@@ -26,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${inter.variable} antialiased bg-gray-100 dark:bg-sidebar`}
+        className={`${inter.variable} ${exo.variable} antialiased bg-gray-100 dark:bg-sidebar`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
 
