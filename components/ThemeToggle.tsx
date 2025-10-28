@@ -1,12 +1,22 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { PowerGlitch } from "powerglitch";
 
 export function ThemeToggle() {
   const { theme, setTheme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { abreDev, devMode } = useLanguage();  
+
+  useEffect(() => {
+    if (devMode) {
+      const glitch = PowerGlitch.glitch(".glitch", { playMode: "always" });
+      return () => glitch.stopGlitch(); // cleanup
+    }
+  }, [devMode]);
 
   useEffect(() => setMounted(true), []);
 
@@ -21,16 +31,25 @@ export function ThemeToggle() {
 
   return (
     <StyledWrapper>
-      <label htmlFor="switch" className="switch">
-        <input
-          id="switch"
-          type="checkbox"
-          checked={!isDark}
-          onChange={alternarTema}
-        />
-        <span className="slider" />
-        <span className="decoration" />
-      </label>
+      <div className={`${devMode && ('glitch')}`}>
+        <label htmlFor="switch" className="switch"
+          onContextMenu={(e) => {
+            e.preventDefault();
+            if(devMode){
+              abreDev('tema')
+            }
+          }}
+        >
+          <input
+            id="switch"
+            type="checkbox"
+            checked={!isDark}
+            onChange={alternarTema}
+          />
+          <span className="slider" />
+          <span className="decoration" />
+        </label>
+      </div>
     </StyledWrapper>
   );
 }

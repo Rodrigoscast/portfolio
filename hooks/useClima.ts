@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function useClima() {
   const [clima, setClima] = useState<any>(null);
@@ -8,76 +9,90 @@ export function useClima() {
     data: "",
     hora: "",
   });
+  const { lang } = useLanguage();
 
-  // ⏰ Atualiza data/hora em tempo real
+  // Atualiza data/hora em tempo real
   useEffect(() => {
     function atualizarHora() {
       const agora = new Date();
 
-      // Formata data e hora no estilo brasileiro
-      const dataFormatada = agora.toLocaleDateString("pt-BR", {
+      // Locale depende da linguagem
+      const locale = lang === "pt" ? "pt-BR" : "en-US";
+
+      const dataFormatada = agora.toLocaleDateString(locale, {
         weekday: "short",
         day: "2-digit",
-        month: "long"
+        month: "long",
       });
 
-      const horaFormatada = agora.toLocaleTimeString("pt-BR", {
+      const horaFormatada = agora.toLocaleTimeString(locale, {
         hour: "2-digit",
-        minute: "2-digit"
+        minute: "2-digit",
       });
 
       setDataHora({
-        data: dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1),
+        data:
+          dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1),
         hora: horaFormatada,
       });
     }
 
     atualizarHora();
-    const interval = setInterval(atualizarHora, 1000); // atualiza a cada segundo
-
+    const interval = setInterval(atualizarHora, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [lang]);
 
-  // 🌦 Busca o clima
+  // Busca o clima
   useEffect(() => {
     async function getClima() {
       try {
-        //Tenta geolocalização via navegador
+        const fetchClima = async (url: string) => {
+          const res = await fetch(url);
+          const data = await res.json();
+
+          // 🔁 Tradução automática
+          const climaTraduzido =
+            lang === "pt"
+              ? data
+              : {
+                  ...data,
+                  descricao: data.descricaoEng || data.descricao,
+                  erro:
+                    data.erro === "Não foi possível obter o clima atual"
+                      ? "Unable to retrieve current weather"
+                      : data.erro === "Erro interno ao consultar o clima"
+                      ? "Internal error while fetching weather data"
+                      : data.erro,
+                };
+
+          setClima(climaTraduzido);
+          setLoading(false);
+        };
+
         if ("geolocation" in navigator) {
           navigator.geolocation.getCurrentPosition(
             async (pos) => {
               const { latitude, longitude } = pos.coords;
-              const res = await fetch(
-                `/api/clima?lat=${latitude}&lon=${longitude}`
-              );
-              const data = await res.json();
-              setClima(data);
-              setLoading(false);
+              await fetchClima(`/api/clima?lat=${latitude}&lon=${longitude}`);
             },
             async () => {
-              //Se o usuário negar → fallback IP
-              const res = await fetch(`/api/clima`);
-              const data = await res.json();
-              setClima(data);
-              setLoading(false);
+              await fetchClima(`/api/clima`);
             },
             { enableHighAccuracy: true, timeout: 8000 }
           );
         } else {
-          //Se geolocation não existir
-          const res = await fetch(`/api/clima`);
-          const data = await res.json();
-          setClima(data);
-          setLoading(false);
+          await fetchClima(`/api/clima`);
         }
       } catch (err: any) {
-        setErro("Erro ao obter o clima");
+        setErro(
+          lang === "pt" ? "Erro ao obter o clima" : "Error fetching weather"
+        );
         setLoading(false);
       }
     }
 
     getClima();
-  }, []);
+  }, [lang]);
 
   return { clima, erro, loading, dataHora };
 }

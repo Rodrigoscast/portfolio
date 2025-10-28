@@ -28,6 +28,7 @@ import docsDark from "@/public/icons/docs-dark.json";
 import { Card, CardContent } from "@/components/ui/card";
 import { TypeAnimation } from 'react-type-animation';
 import kameReveal from "@/public/icons/kame-reveal.json";
+import { PowerGlitch } from "powerglitch";
 
 import {
   Select,
@@ -40,7 +41,9 @@ import {
 export default function Home() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const { theme, systemTheme } = useTheme();
-  const { lang, sequence, info, setInfo, kame, setKame } = useLanguage();
+  const { lang, sequence, setSequence, info, setInfo, kame, setKame, devMode, setDevMode, 
+          abreDev, devCode, setDevCode, devCodeModal, setDevCodeModal 
+  } = useLanguage();  
   const { clima, erro, loading, dataHora } = useClima();
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5);
@@ -77,20 +80,27 @@ export default function Home() {
   const currentTheme = theme === "system" ? systemTheme : theme;
   const isDark = currentTheme === "dark";
 
+  useEffect(() => {
+    if (devMode) {
+      const glitch = PowerGlitch.glitch(".glitch", { playMode: "always" });
+      return () => glitch.stopGlitch(); // cleanup
+    }
+  }, [devMode, devCode]);
+
   const playlists = {
-    todos: [
+    [lang === "pt" ? "todos" : "all"]: [
       { title: "Good Night", artist: "BoDleasons", src: "/musics/lofi/Good_Night.mp3" },
       { title: "Japan Lofi", artist: "FASSounds", src: "/musics/lofi/Japan_Lofi.mp3" },
       { title: "Rainy City", artist: "lofidreams", src: "/musics/lofi/Rainy_City.mp3" },
       { title: "Smooth Chill", artist: "FASSounds", src: "/musics/lofi/Smooth_Chill.mp3" },
     ],
-    lofi: [
+    'lofi': [
       { title: "Good Night", artist: "BoDleasons", src: "/musics/lofi/Good_Night.mp3" },
       { title: "Japan Lofi", artist: "FASSounds", src: "/musics/lofi/Japan_Lofi.mp3" },
       { title: "Rainy City", artist: "lofidreams", src: "/musics/lofi/Rainy_City.mp3" },
       { title: "Smooth Chill", artist: "FASSounds", src: "/musics/lofi/Smooth_Chill.mp3" },
     ],
-    rock: [
+    'rock': [
       { title: "Commercial Upbeat", artist: "Top-Flow", src: "/musics/rock1.mp3" },
       { title: "Happy Rock", artist: "Top-Flow", src: "/musics/rock2.mp3" },
       { title: "Stomping Rock", artist: "AlexGrohl", src: "/musics/rock2.mp3" },
@@ -99,9 +109,10 @@ export default function Home() {
   };
 
   const playlistIcons = {
-    todos: <Disc3 className="text-amber-400" size={18} />,
-    rock: <Guitar className="text-amber-400" size={18} />,
-    lofi: <Coffee className="text-amber-400" size={18} />,
+    'todos': <Disc3 className="text-amber-400" size={18} />,
+    'all': <Disc3 className="text-amber-400" size={18} />,
+    'rock': <Guitar className="text-amber-400" size={18} />,
+    'lofi': <Coffee className="text-amber-400" size={18} />,
   } as const;
 
   const [playlistAtual, setPlaylistAtual] = useState<keyof typeof playlists>("todos");
@@ -276,11 +287,12 @@ export default function Home() {
           >
 
             <TypeAnimation
+              key={lang}
               sequence={[
                 500,
-                "Olá, sou o Rodrigo!",           // Português
+                `${lang === "pt" ? "Olá, sou o Rodrigo!" : "Hey, I'm Rodrigo!"}`,           // Português
                 1000,
-                "Hey, I'm Rodrigo!",             // Inglês
+                `${lang === "pt" ? "Hey, I'm Rodrigo!" : "Olá, sou o Rodrigo!"}`,             // Inglês
                 1000,
                 "¡Hola, soy Rodrigo!",           // Espanhol
                 1000,
@@ -319,7 +331,7 @@ export default function Home() {
             >
               {lang === "pt"
                 ? "Sou um desenvolvedor de software apaixonado por tecnologia e por transformar ideias em soluções reais. Atualmente curso Engenharia de Software, o que me permite unir teoria e prática para criar aplicações completas, seguras e com foco em performance."
-                : "A programmer passionate about technology, specialized in turning coffee into functional code. Always looking for creative challenges, elegant solutions, and bugs that mysteriously vanish when someone looks at my screen."}
+                : "I’m a software developer passionate about technology and turning ideas into real solutions. I’m currently pursuing a degree in Software Engineering, which allows me to combine theory and practice to build complete, secure, and high-performance applications."}
             </motion.p>
 
             <motion.p
@@ -330,7 +342,7 @@ export default function Home() {
             >
               {lang === "pt"
                 ? "Meu foco é desenvolver sistemas robustos e escaláveis — do planejamento ao deploy — sempre com atenção à qualidade, segurança e experiência do usuário. Busco constantemente desafios que me permitam evoluir como profissional e contribuir para equipes que valorizem inovação, eficiência e propósito no que fazem."
-                : "Explore my portfolio and, if you want to see what’s behind it, right-click on any component. That way, you can view the code used to build it — after all, transparency and learning walk hand in hand here."}
+                : "EMy focus is on developing robust and scalable systems — from planning to deployment — with a strong emphasis on quality, security, and user experience. I’m constantly seeking challenges that help me grow as a professional and contribute to teams that value innovation, efficiency, and purpose in everything they do."}
             </motion.p>
 
             {/* Ícones com delay suave */}
@@ -440,18 +452,23 @@ export default function Home() {
           <div className="w-full h-full" >
             <FaleComigo visivel={contatoVisible} ref={refContato} />
           </div>
+
           <motion.div
             ref={refSecret}
             initial={{ opacity: 0, x: 30 }}
             animate={contatoVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
             transition={{ delay: 2, duration: 0.6, ease: "easeOut" }}
-            className={`absolute ${dica ? 'w-70' : 'w-10'} right-0 bottom-25 transition-all duration-300 ease-in-out z-10`}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              if(devMode) abreDev("secret");
+            }}
+            className={`absolute ${dica ? 'w-70' : 'w-10'} right-0 bottom-25 transition-all duration-300 ease-in-out z-10 glitch`}
           >
             <div className="bg-[#FAEDCF] dark:bg-[#3F2F07] rounded-l-lg p-2 flex flex-row cursor-pointer" onClick={() => setDica(!dica)}>
               <ChevronLeft className={`${dica && 'rotate-180'} transition-all duration-300 ease-in-out`} />
               {dica && (
                 <div className="flex flex-row text-sm items-center gap-3 ml-2">
-                  <p className="font-semibold">Segredo: </p>
+                  <p className="font-semibold">{lang === 'pt' ? 'Segredo' : 'Secret'}: </p>
                   <div className="flex flex-row items-center gap-1">
                     <ArrowUp size={12} className={`${sequence.length >= 1 && ('text-green-400')}`} />
                     <ArrowUp size={12} className={`${sequence.length >= 2 && ('text-green-400')}`} />
@@ -475,7 +492,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 400 }}
           animate={info ? { opacity: 1, y: 0 } : { opacity: 0, y: 400 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="flex flex-col items-center justify-center text-foreground px-6 absolute bottom-0 right-14"
+          className="flex flex-col items-center justify-center text-foreground px-6 absolute bottom-0 right-14 z-13"
         >
           {loading ? (
             <div>Carregando...</div>
@@ -490,7 +507,7 @@ export default function Home() {
                     <div className="flex flex-row gap-2 w-full items-center">
                       <div className="w-full flex flex-col text-left">
                         <h2 className="text-5xl font-semibold text-left">{clima.temperatura}°</h2>
-                        <p className="text-base font-bold mt-2">{clima.descricao}</p>
+                        <p className="text-base font-bold mt-2">{lang == 'pt' ? clima.descricao : clima.descricaoEng}</p>
                       </div>
                       {getWeatherIcon()}
                     </div>
@@ -505,7 +522,15 @@ export default function Home() {
 
                   {/* ⏰ Data/Hora estilizada */}
                   <div className="flex w-full flex-col">
-                    <p className="text-6xl tracking-widest text-amber-400 font-extralight font-exo">{dataHora.hora}</p>
+                    {lang == 'pt' ? (
+                      <p className="text-6xl tracking-widest text-amber-400 font-extralight font-exo">{dataHora.hora}</p>
+                    ) : (
+                      <div className="flex flex-row items-end justify-center w-full">
+                        <p className="w-7" />
+                        <p className="text-5xl tracking-widest text-amber-400 font-extralight font-exo">{dataHora.hora.replace('PM', '').replace('AM', '')}</p>
+                        <p className="w-7 tracking-widest text-amber-400 font-extralight font-exo">{dataHora.hora.includes('PM') ? 'PM' : 'AM'}</p>
+                      </div>
+                    )}
                     <p className="text-lg font-light text-muted-foreground">{dataHora.data.replace('.', '')}</p>
                   </div>
 
@@ -519,13 +544,13 @@ export default function Home() {
                     <div className="flex w-full items-center flex-row gap-3">
                       <Select
                         onValueChange={(value) => handlePlaylistChange(value as keyof typeof playlists)}
-                        value={playlistAtual}
+                        value={String(playlistAtual)}
                       >
                         <SelectTrigger
                           className="p-1 w-12 hover:scale-110 transition-all duration-300 cursor-pointer"
                           title="Playlist"
                         >
-                          {playlistIcons[playlistAtual] || <ListMusic className="text-amber-400" size={18} />}
+                          {playlistIcons[playlistAtual as keyof typeof playlistIcons] || <ListMusic className="text-amber-400" size={18} />}
                         </SelectTrigger>
 
                         <SelectContent>
@@ -545,7 +570,7 @@ export default function Home() {
                       <button
                         onClick={prevTrack}
                         className="p-2 hover:scale-110 transition-all duration-300 ease-out cursor-pointer"
-                        title="Anterior"
+                        title={lang == 'pt' ? "Anterior" : "Previous"}
                       >
                         <SkipBack />
                       </button>
@@ -553,7 +578,7 @@ export default function Home() {
                       <button
                         onClick={togglePlay}
                         className="w-10 h-10 bg-amber-400 rounded-full hover:scale-110 transition-all duration-300 ease-out shadow-md cursor-pointer flex items-center justify-center"
-                        title={isPlaying ? "Pausar" : "Tocar"}
+                        title={isPlaying ? lang == 'pt'? "Pausar" : "Pause" : lang == 'pt' ? "Tocar" : "Play"}
                       >
                         {isPlaying ? <Pause className="text-background" /> : <Play className="text-background" />}
                       </button>
@@ -561,7 +586,7 @@ export default function Home() {
                       <button
                         onClick={nextTrack}
                         className="p-2 hover:scale-110 transition-all duration-300 ease-out cursor-pointer"
-                        title="Próxima"
+                        title={lang == 'pt' ? "Próxima" : "Next"}
                       >
                         <SkipForward />
                       </button>
@@ -575,7 +600,7 @@ export default function Home() {
                         <button
                           onClick={() => setIsMuted((prev) => !prev)}                          
                           className={`w-7 h-7 flex items-center justify-center transition-all duration-300 cursor-pointer rounded-b-lg border-x-1 border-b-1 ${showVolume ? 'bg-card' : 'border-transparent'}`}
-                          title={isMuted ? "Ativar som" : "Silenciar"}
+                          title={lang == 'pt' ? (isMuted ? "Ativar som" : "Silenciar") : (isMuted ? "Unmute" : "Mute")}
                         >
                           {isMuted ? (
                             <VolumeX className="text-muted-foreground" size={18} />
@@ -626,7 +651,7 @@ export default function Home() {
           transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
           onMouseEnter={() => setText(true)}
           onMouseLeave={() => setText(false)}
-          className="absolute bottom-5 right-0 bg-blue-300 dark:bg-muted h-15 z-20 shadow-[-10px_5px_35px_rgba(0,0,0,0.15)] rounded-l-full flex items-center justify-start p-3"
+          className="absolute bottom-5 right-0 bg-blue-300 dark:bg-muted h-15 z-13 shadow-[-10px_5px_35px_rgba(0,0,0,0.15)] rounded-l-full flex items-center justify-start p-3"
         >
           <div className="flex flex-row gap-4 relative w-full">
             <img src="/gifs/disco.png" alt="Disco" className="w-10 h-10 animate-slow-spin" />
@@ -636,8 +661,8 @@ export default function Home() {
                 transition={{ delay: (text || showzinho) ? 0.8 : 0, duration: (text || showzinho) ? 0.6 : 0.4, ease: "easeOut" }}
                 className="absolute left-15"
               >
-                <p className="text-xs">Tocando Agora:</p>
-                <p>{tracks[currentIndex].title} - {tracks[currentIndex].artist}</p>
+                <p className="text-xs">{lang == 'pt' ? 'Tocando Agora:' : 'Playing Now:'}</p>
+                <p>{tracks[currentIndex]?.title} - {tracks[currentIndex]?.artist}</p>
               </motion.div>           
           </div>
         </motion.div>

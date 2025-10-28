@@ -3,12 +3,31 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { PowerGlitch } from "powerglitch";
 
 export function LanguageSwitch() {
   const { lang, toggleLanguage } = useLanguage();
+  const { abreDev, devMode } = useLanguage();
+
+  useEffect(() => {
+    if (devMode) {
+      const glitch = PowerGlitch.glitch(".glitch", { playMode: "always" });
+      return () => glitch.stopGlitch(); // cleanup
+    }
+  }, [devMode]);
 
   return (
-    <StyledSwitch onClick={toggleLanguage} $lang={lang}>
+    <StyledSwitch
+      className={`${devMode && ('glitch')}`}
+      onClick={toggleLanguage}
+      $lang={lang}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        if (devMode) {
+          abreDev('language')
+        }
+      }}
+    >
       <div className="track">
         <div className="overlay" />
         <div className="knob" />
@@ -39,9 +58,9 @@ const StyledSwitch = styled.div<{ $lang: string }>`
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
     transition: all 0.4s ease;
     background-image: url(${({ $lang }) =>
-      $lang === "pt"
-        ? "https://flagcdn.com/w80/br.png"
-        : "https://flagcdn.com/w80/us.png"});
+    $lang === "pt"
+      ? "https://flagcdn.com/w80/br.png"
+      : "https://flagcdn.com/w80/us.png"});
     background-size: cover;
     background-position: center;
   }

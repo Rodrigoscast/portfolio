@@ -12,6 +12,13 @@ interface LanguageContextType {
   setInfo: React.Dispatch<React.SetStateAction<boolean>>;
   kame: boolean;
   setKame: React.Dispatch<React.SetStateAction<boolean>>;
+  devMode: boolean;
+  setDevMode: React.Dispatch<React.SetStateAction<boolean>>;
+  abreDev: (nome: string) => void;
+  devCode: string;
+  setDevCode: React.Dispatch<React.SetStateAction<string>>;
+  devCodeModal: boolean;
+  setDevCodeModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -21,6 +28,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [sequence, setSequence] = useState<string[]>([]);
   const [info, setInfo] = useState(false)
   const [kame, setKame] = useState(false)
+  const [devMode, setDevMode] = useState(false)
+  const [devCode, setDevCode] = useState('');
+  const [devCodeModal, setDevCodeModal] = useState(false)
+
+  const abreDev = (nome: string) => {
+    setDevCode(nome)
+    setDevCodeModal(true)
+  }
 
   useEffect(() => {
     const saved = localStorage.getItem("language");
@@ -34,7 +49,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <LanguageContext.Provider value={{ lang, toggleLanguage, sequence, setSequence, info, setInfo, kame, setKame }}>
+    <LanguageContext.Provider value={{ 
+      lang, toggleLanguage, sequence, setSequence, 
+      info, setInfo, kame, setKame, devMode, setDevMode,
+      abreDev, devCode, setDevCode, devCodeModal, setDevCodeModal
+    }}>
       {children}
     </LanguageContext.Provider>
   );

@@ -1,19 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink } from "lucide-react";
+import { X, ExternalLink, Code } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { PowerGlitch } from "powerglitch";
 
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog"
 
 type Projeto = {
@@ -21,32 +23,84 @@ type Projeto = {
     descricao: string;
     tags: string[];
     link: string;
+    host: string;
     imagem: string;
 };
 
-const projetos: Projeto[] = [
+const ptProjects: Projeto[] = [
     {
         nome: "Eva - Solução Unimed",
         descricao:
-            "Criado durante um hackaton de 24h, Eva é um sistema de agendamento médico através de chatbots e IAs, contando com um sistema de cadastro, login, análise de imagens e leitor de PDFs",
+            "Criado durante um hackathon de 24h, Eva é um sistema inteligente de agendamento médico com chatbots e IA. Possui cadastro de pacientes, login seguro, análise de imagens e leitura de PDFs para tornar o atendimento mais rápido e acessível.",
         tags: ["Next.js", "FastAPI", "Supabase", "Llama API"],
         link: "https://github.com/Rodrigoscast/hackaton-2025",
+        host: "",
         imagem: "/img/imagem-sample.jpg",
     },
     {
         nome: "Sistema de Estoque Web",
         descricao:
-            "Sistema completo de controle de estoque, com entrada e saída de peças, acompanhamento de peças por projeto, produção por usuário, relatório de compras, alertas de estoque baixo e gráficos completos de análise e previsão do estoque.",
+            "Plataforma completa de controle de estoque, com entradas e saídas de peças, controle por projeto, produção por usuário, relatórios de compras, alertas de estoque baixo e dashboards analíticos com previsão de consumo.",
         tags: ["Next.js", "Node.js", "PostgreSQL", "Python"],
         link: "https://estoque-demo.vercel.app/",
+        host: "",
         imagem: "/img/imagem-sample.jpg",
     },
     {
         nome: "Ludoteca",
         descricao:
-            "O projeto tem como objetivo reunir jogos clássicos em um só lugar, oferecendo uma experiência simples, divertida e nostálgica para quem quer relaxar e testar o raciocínio de forma leve e acessível.",
+            "Reúne jogos clássicos como forca e jogo da velha em um só lugar — simples, divertida e nostálgica. Ideal para quem quer relaxar e testar o raciocínio de forma leve e acessível.",
+        tags: ["Next.js", "Framer Motion", "Shadcn/UI", "TailwindCSS", "API"],
+        link: "https://guarita.vercel.app/",
+        host: "https://guarita.vercel.app/",
+        imagem: "/img/imagem-sample.jpg",
+    },
+    {
+        nome: "Portfólio",
+        descricao:
+            "Um portfólio interativo e dinâmico, criado para mostrar meus projetos e habilidades com animações modernas, efeitos e temas dinâmicos, consumo de APIs e muito mais. Possui easter eggs e interações em tempo real.",
+        tags: ["Next.js", "Framer Motion", "Shadcn/UI", "TailwindCSS", "API"],
+        link: "https://rodrigoscast.vercel.app/",
+        host: "https://rodrigoscast.vercel.app/",
+        imagem: "/img/imagem-sample.jpg",
+    },
+];
+
+const enProjects: Projeto[] = [
+    {
+        nome: "Eva - Unimed Solution",
+        descricao:
+            "Developed during a 24-hour hackathon, Eva is an intelligent medical scheduling system powered by chatbots and AI. It includes patient registration, secure login, image analysis, and PDF reading for smarter and faster appointments.",
+        tags: ["Next.js", "FastAPI", "Supabase", "Llama API"],
+        link: "https://github.com/Rodrigoscast/hackaton-2025",
+        host: "",
+        imagem: "/img/imagem-sample.jpg",
+    },
+    {
+        nome: "Web Inventory System",
+        descricao:
+            "A complete inventory management platform tracking item inflow and outflow, project-based control, user production, purchase reports, low-stock alerts, and full analytics dashboards with consumption forecasts.",
+        tags: ["Next.js", "Node.js", "PostgreSQL", "Python"],
+        link: "https://estoque-demo.vercel.app/",
+        host: "",
+        imagem: "/img/imagem-sample.jpg",
+    },
+    {
+        nome: "Ludoteca",
+        descricao:
+            "A collection of classic games like Hangman and Tic-Tac-Toe — simple, fun, and nostalgic. Perfect for those who want to relax and exercise their mind in an easy and accessible way.",
         tags: ["Next.js", "Framer Motion"],
         link: "https://guarita.vercel.app/",
+        host: "https://guarita.vercel.app/",
+        imagem: "/img/imagem-sample.jpg",
+    },
+    {
+        nome: "Portfolio",
+        descricao:
+            "An interactive and dynamic portfolio designed to showcase my projects and skills through modern animations, visual effects, dynamic themes, API integrations, and more. It also features Easter eggs and real-time interactions.",
+        tags: ["Next.js", "Framer Motion", "Shadcn/UI", "TailwindCSS"],
+        link: "https://rodrigoscast.vercel.app/",
+        host: "https://rodrigoscast.vercel.app/",
         imagem: "/img/imagem-sample.jpg",
     },
 ];
@@ -65,6 +119,16 @@ export default function Projetos({
         null
     );
     const [modalProjeto, setModalProjeto] = useState(false);
+    const { lang, abreDev, devMode } = useLanguage();
+
+    useEffect(() => {
+        if (devMode) {
+            const glitch = PowerGlitch.glitch(".glitch", { playMode: "always" });
+            return () => glitch.stopGlitch(); // cleanup
+        }
+    }, [devMode]);
+
+    const projetos = lang == "pt" ? ptProjects : enProjects;
 
     return (
         <motion.div
@@ -79,11 +143,19 @@ export default function Projetos({
                 layout
                 className="font-bold text-3xl my-10 text-center transition-colors duration-500"
             >
-                Conheça alguns dos meus principais projetos
+                {lang == 'pt' ? 'Conheça alguns dos meus principais projetos' : 'Explore some of my featured projects'}
             </motion.h1>
 
             {/* Cards de projetos */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
+            <div
+                className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 w-full max-w-6xl ${devMode && ('glitch')}`}
+                onContextMenu={(e) => {
+                    e.preventDefault();
+                    if (devMode) {
+                        abreDev('projetos')
+                    }
+                }}
+            >
                 {projetos.map((proj, i) => (
                     <motion.div
                         key={i}
@@ -95,7 +167,7 @@ export default function Projetos({
                             type: "spring",
                             stiffness: 120,
                         }}
-                        onClick={() => {setProjetoSelecionado(proj); setModalProjeto(true)}}
+                        onClick={() => { setProjetoSelecionado(proj); setModalProjeto(true) }}
                         className="cursor-pointer bg-card border border-border rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 ease-out flex flex-col hover:scale-105"
                     >
                         {/* Imagem do projeto */}
@@ -143,7 +215,7 @@ export default function Projetos({
                                     className="w-full h-full object-cover"
                                 />
                             </div>
-                            <DialogTitle  className="text-2xl font-bold mb-3">
+                            <DialogTitle className="text-2xl font-bold mb-3">
                                 {projetoSelecionado.nome}
                             </DialogTitle>
                             <div className="flex flex-wrap gap-2 mb-4">
@@ -161,15 +233,28 @@ export default function Projetos({
                             </DialogDescription>
                         </DialogHeader>
 
-                        <a
-                            href={projetoSelecionado.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-xl font-medium hover:opacity-90 transition"
-                        >
-                            <ExternalLink size={18} />
-                            Acessar Projeto
-                        </a>
+                        <div className="flex flex-row items-center w-full justify-between">
+                            <a
+                                href={projetoSelecionado.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-xl font-medium hover:opacity-90 transition"
+                            >
+                                <Code size={18} />
+                                Acessar Código
+                            </a>
+                            {projetoSelecionado.host != '' && (
+                                <a
+                                    href={projetoSelecionado.host}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-xl font-medium hover:opacity-90 transition"
+                                >
+                                    <ExternalLink size={18} />
+                                    Acessar Projeto
+                                </a>
+                            )}
+                        </div>
                     </DialogContent>
                 </Dialog>
             )}

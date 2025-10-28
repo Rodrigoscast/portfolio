@@ -7,6 +7,8 @@ import { ArrowLeft } from "lucide-react";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import skillsData from "@/public/skills.json";
 import bibliotecaData from "@/public/biblioteca.json";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { PowerGlitch } from "powerglitch";
 
 import frontend from "@/public/icons/frontend.json";
 import backend from "@/public/icons/backend.json";
@@ -65,6 +67,58 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
         { nome: "IA", ref: lottieRefmach, light: ia, dark: iaDark },
         { nome: "Segurança", ref: lottieRefsecu, light: seguranca, dark: segurancaDark },
     ];
+
+    const translates: Record<string, string> = {
+        // Categorias
+        "Linguagens": "Languages",
+        "Ferramentas": "Tools",
+        "IA": "AI",
+        "Segurança": "Security",
+        "Integração C#": "C# Integration",
+
+        // Inteligência Artificial
+        "APIs de IA": "AI APIs",
+        "Técnicas": "Techniques",
+        "Aplicações": "Applications",
+        "Engenharia de Prompt": "Prompt Engineering",
+        "Modelos de geração (texto / imagem / dados)": "Generation Models (text / image / data)",
+        "Contexto dinâmico (histórico e embeddings)": "Dynamic Context (history and embeddings)",
+        "Análise de linguagem (NLP)": "Language Analysis (NLP)",
+        "Automação inteligente": "Intelligent Automation",
+        "Assistentes personalizados": "Custom Assistants",
+        "IA em sistemas": "AI in Systems",
+
+        // Segurança
+        "Proteção e Monitoramento": "Protection and Monitoring",
+        "Segurança em autenticação": "Authentication Security",
+        "Logging e monitoramento": "Logging and Monitoring",
+        "Proteção de endpoints": "Endpoint Protection",
+        "Pentest e Hacking Ético": "Pentesting and Ethical Hacking",
+        "Reconhecimento e enumeração": "Reconnaissance and Enumeration",
+        "Port scanning": "Port Scanning",
+        "SSH": "SSH",
+        "Exploração web": "Web Exploitation",
+        "Escalação de privilégios": "Privilege Escalation",
+        "Pós-exploração": "Post-Exploitation",
+        "Fundamentos de Cracking": "Cracking Fundamentals",
+
+        // Sistemas Operacionais
+        "Sistemas Operacionais": "Operating Systems",
+        "Linux Intermediário": "Intermediate Linux",
+        "Windows Avançado": "Advanced Windows",
+        "Windows Server": "Windows Server",
+        "Bash Script": "Bash Scripting",
+        "Powershell": "PowerShell",
+    };
+
+    const { lang, abreDev, devMode } = useLanguage();
+    
+    useEffect(() => {
+        if (devMode) {
+            const glitch = PowerGlitch.glitch(".glitch", { playMode: "always" });
+            return () => glitch.stopGlitch(); // cleanup
+        }
+    }, [devMode]);
 
     useEffect(() => {
         setSkills(skillsData);
@@ -127,14 +181,20 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                 autoplay={false}
                                 style={{ width: 60, height: 60 }}
                             />
-                            Tecnologias e habilidades com {selecionado}
+                            {lang == 'pt' ? "Tecnologias e habilidades com" : "Technologies and skills for"} {selecionado}
                         </div>
-                    ) : "Tecnologias e habilidades que aplico no meu dia a dia de desenvolvimento"}
+                    ) : lang == 'pt' ? "Tecnologias e habilidades que aplico no meu dia a dia de desenvolvimento" : "Technologies and skills I use in my daily development routine"}
             </motion.h1>
 
             <motion.div
                 layout
-                className="relative w-full flex items-center justify-center overflow-hidden"
+                className={`relative w-full flex items-center justify-center overflow-hidden ${devMode && ('glitch')}`}
+                onContextMenu={(e) => {
+                    e.preventDefault();
+                    if (devMode) {
+                        abreDev('tecnologias')
+                    }
+                }}
             >
                 <AnimatePresence mode="wait">
                     {!selecionado ? (
@@ -180,7 +240,9 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                                 autoplay={false}
                                                 style={{ width: 65, height: 65 }}
                                             />
-                                            <span className="text-base font-medium">{cat.nome}</span>
+                                            <span className="text-base font-medium">
+                                                {translates[cat.nome] || cat.nome}
+                                            </span>
                                         </div>
                                     </motion.div>
                                 );
@@ -233,7 +295,7 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                                             alt={item}
                                                         />
                                                     )}
-                                                    <span>{item}</span>
+                                                    <span>{translates[item] || item}</span>
                                                 </div>
                                             );
                                         })
@@ -284,7 +346,7 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                                                 alt={sub.nome}
                                                             />
                                                         )}
-                                                        <h3 className="font-semibold text-lg flex flex-col">{sub.nome}</h3>
+                                                        <h3 className="font-semibold text-lg flex flex-col">{translates[sub.nome] || sub.nome}</h3>
                                                     </div>
 
                                                     <div className={`flex flex-wrap gap-4 justify-center w-full`}>
@@ -299,7 +361,7 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                                                             shadow-md flex flex-col items-center justify-center gap-2
                                                                             hover:shadow-xl hover:scale-105 transition-transform"
                                                                     >
-                                                                        <span className="text-center">{skill}</span>
+                                                                        <span className="text-center">{translates[skill] || skill}</span>
                                                                     </div>
                                                                 );
 
@@ -327,7 +389,7 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                                                                 alt={skill}
                                                                             />
                                                                         )}
-                                                                        <span className="text-center">{skill}</span>
+                                                                        <span className="text-center">{translates[skill] || skill}</span>
                                                                     </div>
                                                                 );
                                                             }
@@ -355,7 +417,7 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                     text-neutral-700 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700 
                                     hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-all duration-300 shadow cursor-pointer"
                             >
-                                <ArrowLeft className="w-5 h-5" /> Voltar
+                                <ArrowLeft className="w-5 h-5" /> {lang == 'pt' ? 'Voltar' : 'Back'}
                             </motion.button>
                         </motion.div>
                     )}

@@ -18,7 +18,7 @@ interface Mensagem {
 }
 
 export default function ChatKame() {
-    const { kame, setKame } = useLanguage();
+    const { lang, kame, setKame } = useLanguage();
     const [mensagens, setMensagens] = useState<Mensagem[]>([]);
     const [texto, setTexto] = useState("");
     const lottieRef = useRef<any>(null);
@@ -49,7 +49,7 @@ export default function ChatKame() {
     // Carrega histórico
     useEffect(() => {
         const salvo = localStorage.getItem("chatKame");
-        if (salvo) {
+        if (salvo && salvo != '[]') {
             setMensagens(JSON.parse(salvo));
         } else {
             const inicial: Mensagem[] = [
@@ -107,6 +107,13 @@ export default function ChatKame() {
         }
     }
 
+    useEffect(() => {
+        lottieRef.current?.goToAndStop(0, true);
+        setTimeout(() => {
+           lottieRef.current?.play() 
+        }, 1000);        
+    }, [kame])
+
     return (
         <motion.div
             ref={refKame}
@@ -115,17 +122,23 @@ export default function ChatKame() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="absolute bottom-0 right-14 flex flex-col items-center justify-center"
         >
-            <Card className="bg-card/60 border-border w-96 max-h-[70vh] shadow-xl rounded-t-2xl rounded-b-none backdrop-blur-md overflow-hidden flex flex-col">
-                <CardContent className="flex flex-col h-full p-4 gap-3">
-                    <div className="flex items-center gap-2 justify-center text-sm font-semibold text-foreground">
+            <Card className="bg-card/60 border-border w-96 max-h-[90vh] pt-1 shadow-xl rounded-t-2xl rounded-b-none backdrop-blur-md overflow-hidden flex flex-col">
+                <CardContent className="flex flex-col h-full px-2 gap-3">
+                    <div className="flex items-center gap-2 justify-center text-sm font-semibold text-foreground h-25 relative">
                         <Lottie
                             lottieRef={lottieRef}
                             animationData={kameReveal}
                             loop={false}
                             autoplay={false}
-                            className="w-10 h-10"
+                            className="w-25 h-25 rounded-full bg-muted"
                         />
-                        <span>Kame IA</span>
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.2 }}
+                            animate={kame ? { opacity: 1, scale: 1, transition: { delay: 1.6, duration: 0.6, ease: "easeOut" } } : { opacity: 0, scale: 0.2 }}
+                            className="absolute -bottom-1 bg-blue-300 dark:bg-blue-500 rounded-full px-2"
+                        >
+                            Kame IA
+                        </motion.div>
                     </div>                   
 
                     <ScrollArea ref={scrollAreaRef} className="rounded-md h-75">
@@ -152,7 +165,7 @@ export default function ChatKame() {
                             ))}
                              {digitando && (
                                 <div className="text-xs text-muted-foreground italic pl-3">
-                                    Kame está digitando...
+                                    {lang == 'pt' ? 'Kame está digitando...' : 'Kame is typing...'}
                                 </div>
                             )}
                         </div>
@@ -160,7 +173,7 @@ export default function ChatKame() {
 
                     <div className="flex items-center gap-2">
                         <Input
-                            placeholder="Fale com o Kame..."
+                            placeholder={lang == 'pt' ? "Fale com o Kame..." : "Talk to Kame..."}
                             value={texto}
                             onChange={(e) => setTexto(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && enviarMensagem()}
