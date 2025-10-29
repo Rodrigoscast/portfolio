@@ -1,77 +1,124 @@
-# 🚀 Portfólio — Rodrigo Castro
+# 🧠 Rodrigo Castro — Portfólio Interativo
 
-Este é o meu portfólio desenvolvido em **Next.js (Fullstack)**, integrando **frontend** e **backend** em um único projeto.  
-O objetivo é apresentar meus trabalhos, projetos, habilidades e experiências em Engenharia de Software de forma moderna, responsiva e performática.
+> “Não é só um portfólio. É uma experiência.”
 
----
-
-## 🧠 Tecnologias Principais
-
-- **Next.js** — Framework React fullstack  
-- **TypeScript** — Tipagem estática para mais segurança  
-- **Tailwind CSS** — Estilização rápida e responsiva  
-- **Shadcn/UI** — Componentes modernos e acessíveis  
-- **API Routes do Next.js** — Para o backend integrado  
-- **Vercel** — Deploy contínuo
+Um espaço vivo, criativo e totalmente interativo, que reflete minha jornada como Engenheiro de Software, Desenvolvedor Full Stack e criador apaixonado por tecnologia e design.
+Cada detalhe deste portfólio foi pensado para unir arte, código e propósito — com easter eggs, modos secretos e uma atmosfera que conversa com quem ama tecnologia de verdade.
 
 ---
 
-## ⚙️ Requisitos
+## 🌌 Sobre o projeto
 
-Antes de começar, você precisa ter instalado:
+Este portfólio foi criado para ser mais do que uma vitrine de projetos.
+Ele é um universo digital onde o visitante pode:
 
-- **Node.js** (versão 18 ou superior)
-- **npm** ou **yarn** ou **pnpm** (gerenciador de pacotes)
+- 🚀 Explorar minhas habilidades com programação de uma forma interativa e intuitiva.
+
+- 🎮 Descobrir segredos — há um Dev Mode, ativado na sidebar, que revela o código por trás de cada parte do site.
+
+- 🎧 Ouvir música e relaxar enquanto navega, com um player musical completo, com playlists temáticas.
+
+- 🕹️ Desbloquear jogos escondidos, como mini-games nostálgicos embutidos direto no site.
+
+- 👾 Interagir com animações, efeitos de glitch, partículas e um toque retrô sci-fi.
+
+> Cada interação é um reflexo da minha forma de ver o desenvolvimento: criativo, técnico e humano.
 
 ---
 
-## 🧩 Instalação e Execução
+## ⚙️ Tecnologias utilizadas
+> 🎨 Frontend
 
-### 1️⃣ Clonar o repositório
+- Next.js (App Router)
 
-```bash
-git clone https://github.com/SEU-USUARIO/SEU-PORTFOLIO.git
-```
-### 2️⃣ Entrar na pasta do projeto
+- React + TypeScript
 
-```bash
-cd portfolio
-```
+- TailwindCSS + Shadcn/UI
 
-### 3️⃣ Instalar as dependências
+- Framer Motion (animações dinâmicas e suaves)
 
-```bash
-npm install
-# ou
-yarn install
-# ou
-pnpm install
-```
+- Lucide React (ícones vetoriais modernos)
 
-### 4️⃣ Rodar o projeto em modo de desenvolvimento
+- Lottie / Lordicon (animações vivas e temáticas)
 
-```bash
-npm run dev
-```
+- NextUI (modo claro/escuro elegante)
 
-O projeto ficará disponível em:
-👉 http://localhost:3000
+- PowerGlitch (efeito glitch visual)
 
-### 🧱 Estrutura do Projeto
+- JSON-Server (mock API para dados dinâmicos)
 
-```bash
-📦 portfolio/
-├── 📁 app/                   # Páginas e rotas do Next.js (App Router)
-│   ├── globals.css           # Estilos
-│   ├── layout.tsx            # Layout principal
-│   ├── page.tsx              # Página principal
-│   ├── api/                  # Rotas de API (backend integrado)
-│   └── ...
-├── 📁 components/            # Componentes reutilizáveis
-├── 📁 public/                # Imagens e assets públicos
-├── 📁 contexts/              # Contextos globais do Reac
-├── 📁 hooks/                 # Hooks personalizados reutilizáveis
-└── 📁 lib/                   # Funções utilitárias, configurações e integrações externas
-```
+--
 
+> 🧠 Backend
 
+- Next.js
+
+- APIs para clima, IA e dados de projeto
+
+---
+
+## ✨ Destaques técnicos
+
+- Sistema multilíngue (Português / Inglês)
+
+- Gerenciador de contexto global
+
+- Hooks customizados (useClima, useMusica, useDevMode, etc.)
+
+- Interface responsiva e adaptada ao toque
+
+- Animações Framer Motion sincronizadas com estado
+
+- Dark / Light Mode com persistência
+
+- Controle de música persistente entre páginas
+
+- Menu de contexto interativo (botão direito)
+
+- Efeitos de glitch controlados via estado devMode
+
+---
+
+## 🧩 Projetos em destaque
+Projeto	Descrição	Tecnologias
+🏥 Eva — Solução Unimed	Sistema de agendamento médico com IA, criado em hackathon de 24h.	Next.js · FastAPI · Supabase · Llama API
+📊 Malharia BI	Dashboard de controle de produção, com filtros, turnos e relatórios dinâmicos.	React · Shadcn · Recharts · API interna
+💼 Brasil Empreendimentos Cliente	App mobile para controle de contratos e parcelas.	React Native · Expo · Supabase
+🧾 Sistema de Estoque Web	Plataforma completa de controle de produtos e movimentações.	Next.js · Node.js · PostgreSQL
+
+| Projeto | Descrição |
+|-------|------------|
+| **🏥 Eva — Solução Unimed** | Sistema de agendamento médico com IA, criado em hackathon de 24h. |
+| **🧾 Sistema de Estoque Web** | Plataforma completa de controle de produtos e movimentações. |
+| **🎮 Ludoteca** | Reúne jogos clássicos como forca e jogo da velha em um só lugar |
+
+---
+
+## 💬 Filosofia
+
+> “Software bom é aquele que as pessoas querem usar antes mesmo de entender como ele funciona.”
+
+Este portfólio é a junção de tecnologia, arte e identidade.
+Cada clique, cada som e cada animação têm um propósito: mostrar que desenvolvimento não precisa ser apenas funcional — pode ser imersivo, divertido e inspirador.
+
+---
+
+## 🧑‍💻 Autor
+
+Rodrigo Castro
+🎓 Engenheiro de Software | 💡 Full Stack Developer | 🎮 Criador Interativo
+> 💬 “Se dá pra sonhar, dá pra codar.”
+
+- 🌍 GitHub
+
+- 💼 LinkedIn
+
+- 📧 rodrigoscast.dev@gmail.com
+
+---
+
+## 🕹️ Segredo final
+
+> “↑ ↑ ↓ ↓ ← → ← → B A”
+
+Tenta aí, dev 😉
