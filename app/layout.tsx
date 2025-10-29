@@ -20,8 +20,8 @@ const exo = Exo({
 });
 
 export const metadata: Metadata = {
-  title: "Focal Gestão",
-  description: "Seja bem-vindo",
+  title: "Rodrigo Castro",
+  description: "Seja bem-vindo ao meu portfólio",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
