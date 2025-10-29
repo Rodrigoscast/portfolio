@@ -35,34 +35,34 @@ const ptProjects: Projeto[] = [
         tags: ["Next.js", "FastAPI", "Supabase", "Llama API"],
         link: "https://github.com/Rodrigoscast/hackaton-2025",
         host: "",
-        imagem: "/img/imagem-sample.jpg",
+        imagem: "/img/eva.jpg",
     },
     {
         nome: "Sistema de Estoque Web",
         descricao:
             "Plataforma completa de controle de estoque, com entradas e saídas de peças, controle por projeto, produção por usuário, relatórios de compras, alertas de estoque baixo e dashboards analíticos com previsão de consumo.",
         tags: ["Next.js", "Node.js", "PostgreSQL", "Python"],
-        link: "https://estoque-demo.vercel.app/",
+        link: "https://github.com/Rodrigoscast/estoque-web",
         host: "",
-        imagem: "/img/imagem-sample.jpg",
+        imagem: "/img/estoque.png",
     },
     {
         nome: "Ludoteca",
         descricao:
             "Reúne jogos clássicos como forca e jogo da velha em um só lugar — simples, divertida e nostálgica. Ideal para quem quer relaxar e testar o raciocínio de forma leve e acessível.",
-        tags: ["Next.js", "Framer Motion", "Shadcn/UI", "TailwindCSS", "API"],
-        link: "https://guarita.vercel.app/",
-        host: "https://guarita.vercel.app/",
-        imagem: "/img/imagem-sample.jpg",
+        tags: ["Next.js", "Framer Motion", "Shadcn/UI", "TailwindCSS"],
+        link: "https://github.com/Rodrigoscast/ludoteca",
+        host: "https://my-ludoteca.netlify.app/",
+        imagem: "/img/ludoteca.png",
     },
     {
         nome: "Portfólio",
         descricao:
             "Um portfólio interativo e dinâmico, criado para mostrar meus projetos e habilidades com animações modernas, efeitos e temas dinâmicos, consumo de APIs e muito mais. Possui easter eggs e interações em tempo real.",
         tags: ["Next.js", "Framer Motion", "Shadcn/UI", "TailwindCSS", "API"],
-        link: "https://rodrigoscast.vercel.app/",
-        host: "https://rodrigoscast.vercel.app/",
-        imagem: "/img/imagem-sample.jpg",
+        link: "https://github.com/Rodrigoscast/portfolio",
+        host: "https://rodrigo-castro.netlify.app/",
+        imagem: "/img/portfolio.jpg",
     },
 ];
 
@@ -74,34 +74,34 @@ const enProjects: Projeto[] = [
         tags: ["Next.js", "FastAPI", "Supabase", "Llama API"],
         link: "https://github.com/Rodrigoscast/hackaton-2025",
         host: "",
-        imagem: "/img/imagem-sample.jpg",
+        imagem: "/img/eva.jpg",
     },
     {
         nome: "Web Inventory System",
         descricao:
             "A complete inventory management platform tracking item inflow and outflow, project-based control, user production, purchase reports, low-stock alerts, and full analytics dashboards with consumption forecasts.",
         tags: ["Next.js", "Node.js", "PostgreSQL", "Python"],
-        link: "https://estoque-demo.vercel.app/",
+        link: "https://github.com/Rodrigoscast/estoque-web",
         host: "",
-        imagem: "/img/imagem-sample.jpg",
+        imagem: "/img/estoque.png",
     },
     {
         nome: "Ludoteca",
         descricao:
             "A collection of classic games like Hangman and Tic-Tac-Toe — simple, fun, and nostalgic. Perfect for those who want to relax and exercise their mind in an easy and accessible way.",
-        tags: ["Next.js", "Framer Motion"],
-        link: "https://guarita.vercel.app/",
-        host: "https://guarita.vercel.app/",
-        imagem: "/img/imagem-sample.jpg",
+        tags: ["Next.js", "Framer Motion", "Shadcn/UI", "TailwindCSS"],
+        link: "https://github.com/Rodrigoscast/ludoteca",
+        host: "https://my-ludoteca.netlify.app/",
+        imagem: "/img/ludoteca.png",
     },
     {
         nome: "Portfolio",
         descricao:
             "An interactive and dynamic portfolio designed to showcase my projects and skills through modern animations, visual effects, dynamic themes, API integrations, and more. It also features Easter eggs and real-time interactions.",
-        tags: ["Next.js", "Framer Motion", "Shadcn/UI", "TailwindCSS"],
-        link: "https://rodrigoscast.vercel.app/",
-        host: "https://rodrigoscast.vercel.app/",
-        imagem: "/img/imagem-sample.jpg",
+        tags: ["Next.js", "Framer Motion", "Shadcn/UI", "TailwindCSS", "API"],
+        link: "https://github.com/Rodrigoscast/portfolio",
+        host: "https://rodrigo-castro.netlify.app/",
+        imagem: "/img/portfolio.jpg",
     },
 ];
 
@@ -133,7 +133,7 @@ export default function Projetos({
     return (
         <motion.div
             ref={ref}
-            className="flex flex-col w-full items-center justify-start min-h-screen p-10 pt-5 overflow-hidden"
+            className="flex flex-col w-full items-center justify-start min-h-screen w-full p-10 pt-5 overflow-hidden"
         >
             {/* Título */}
             <motion.h1
@@ -148,7 +148,7 @@ export default function Projetos({
 
             {/* Cards de projetos */}
             <div
-                className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 w-full max-w-6xl ${devMode && ('glitch')}`}
+                className={`grid grid-cols-1 grid-cols-2 gap-8 w-full px-20 ${devMode && ('glitch')}`}
                 onContextMenu={(e) => {
                     e.preventDefault();
                     if (devMode) {

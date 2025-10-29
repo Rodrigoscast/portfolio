@@ -208,8 +208,6 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                 return (
                                     <motion.div
                                         key={cat.nome}
-                                        layoutId={cat.nome}
-                                        onClick={() => { setSelecionado(cat.nome); setFirstLoad(false) }}
                                         initial={{ opacity: 0, scale: 0 }}
                                         animate={
                                             visivel
@@ -223,27 +221,32 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                             stiffness: 120,
                                             damping: 10
                                         }}
-                                        onMouseEnter={() => cat.ref.current?.play()}
-                                        onMouseLeave={() => {
-                                            cat.ref.current?.stop();
-                                            cat.ref.current?.goToAndStop(0, true);
-                                        }}
-                                        className="w-32 h-32 flex items-center justify-center rounded-full cursor-pointer
-                                            bg-muted dark:bg-input font-medium text-sm shadow-md hover:scale-110 hover:bg-card dark:hover:bg-muted
-                                            transition-all duration-300 ease-out"
                                     >
-                                        <div className="flex flex-col items-center">
-                                            <Lottie
-                                                lottieRef={cat.ref}
-                                                animationData={isDark ? cat.dark : cat.light}
-                                                loop={true}
-                                                autoplay={false}
-                                                style={{ width: 65, height: 65 }}
-                                            />
-                                            <span className="text-base font-medium">
-                                                {translates[cat.nome] || cat.nome}
-                                            </span>
-                                        </div>
+                                        <motion.div                                            
+                                            layoutId={cat.nome}
+                                            onClick={() => { setSelecionado(cat.nome); setFirstLoad(false) }}                                            
+                                            onMouseEnter={() => cat.ref.current?.play()}
+                                            onMouseLeave={() => {
+                                                cat.ref.current?.stop();
+                                                cat.ref.current?.goToAndStop(0, true);
+                                            }}
+                                            className="w-32 h-32 flex items-center justify-center rounded-full cursor-pointer
+                                                bg-muted dark:bg-input font-medium text-sm shadow-md hover:scale-110 hover:bg-card dark:hover:bg-muted
+                                                transition-all duration-300 ease-out"
+                                        >
+                                            <div className="flex flex-col items-center">
+                                                <Lottie
+                                                    lottieRef={cat.ref}
+                                                    animationData={isDark ? cat.dark : cat.light}
+                                                    loop={true}
+                                                    autoplay={false}
+                                                    style={{ width: 65, height: 65 }}
+                                                />
+                                                <span className="text-base font-medium">
+                                                    {translates[cat.nome] || cat.nome}
+                                                </span>
+                                            </div>
+                                        </motion.div>
                                     </motion.div>
                                 );
                             })}

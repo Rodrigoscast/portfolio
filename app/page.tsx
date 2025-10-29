@@ -93,6 +93,10 @@ export default function Home() {
       { title: "Japan Lofi", artist: "FASSounds", src: "/musics/lofi/Japan_Lofi.mp3" },
       { title: "Rainy City", artist: "lofidreams", src: "/musics/lofi/Rainy_City.mp3" },
       { title: "Smooth Chill", artist: "FASSounds", src: "/musics/lofi/Smooth_Chill.mp3" },
+      { title: "Commercial Upbeat", artist: "Top-Flow", src: "/musics/rock/Commercial_Upbeat.mp3" },
+      { title: "Happy Rock", artist: "Top-Flow", src: "/musics/rock/Happy_Rock.mp3" },
+      { title: "Stomping Rock", artist: "AlexGrohl", src: "/musics/rock/Stomping_Rock.mp3" },
+      { title: "Whistle Joyride", artist: "Top-Flow", src: "/musics/rock/Whistle_Joyride.mp3" },
     ],
     'lofi': [
       { title: "Good Night", artist: "BoDleasons", src: "/musics/lofi/Good_Night.mp3" },
@@ -101,12 +105,27 @@ export default function Home() {
       { title: "Smooth Chill", artist: "FASSounds", src: "/musics/lofi/Smooth_Chill.mp3" },
     ],
     'rock': [
-      { title: "Commercial Upbeat", artist: "Top-Flow", src: "/musics/rock1.mp3" },
-      { title: "Happy Rock", artist: "Top-Flow", src: "/musics/rock2.mp3" },
-      { title: "Stomping Rock", artist: "AlexGrohl", src: "/musics/rock2.mp3" },
-      { title: "Whistle Joyride", artist: "Top-Flow", src: "/musics/rock2.mp3" },
+      { title: "Commercial Upbeat", artist: "Top-Flow", src: "/musics/rock/Commercial_Upbeat.mp3" },
+      { title: "Happy Rock", artist: "Top-Flow", src: "/musics/rock/Happy_Rock.mp3" },
+      { title: "Stomping Rock", artist: "AlexGrohl", src: "/musics/rock/Stomping_Rock.mp3" },
+      { title: "Whistle Joyride", artist: "Top-Flow", src: "/musics/rock/Whistle_Joyride.mp3" },
     ]
   };
+
+  function shuffle(array: any) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  // Pega o nome correto da playlist "todos/all"
+  const key = lang === "pt" ? "todos" : "all";
+
+  // Embaralha a playlist
+  playlists[key] = shuffle(playlists[key]);
 
   const playlistIcons = {
     'todos': <Disc3 className="text-amber-400" size={18} />,

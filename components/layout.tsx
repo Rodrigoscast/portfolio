@@ -17,6 +17,7 @@ import CassetteModel from "@/components/CassetteModel";
 import { Button } from '@/components/ui/button';
 import { useLanguage } from "@/contexts/LanguageContext";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
+import PacMan from '@/components/PacMan';
 
 import kameHover from "@/public/icons/kame-hover.json";
 import glasses from "@/public/icons/linguagem.json";
@@ -45,6 +46,7 @@ import {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
+  const [SSR, setSSR] = useState(false)
   const [tape, setTape] = useState(false)
   const [doom, setDoom] = useState(false)
   const [activeSection, setActiveSection] = useState<string>("home");
@@ -371,7 +373,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div
           className="fixed inset-0 z-[999999] flex items-center justify-center backdrop-blur-sm bg-black/60"
         >
-          <h1>Rodando Doom</h1>
+          <PacMan />
           <Button
             variant={'destructive'}
             size={'icon'}
@@ -426,11 +428,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 }}
                 className="glitch relative px-6 py-3 text-lg font-medium bg-card hover:bg-card/80 text-card-foreground shadow-md transition-all cursor-pointer"
               >
-                {lang === "pt" ? "Right-click!" : "Clique com o botão direito!"}
+                {lang === "en" ? "Right-click!" : "Clique com o botão direito!"}
               </Button>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              {lang === "pt"
+              {lang === "en"
                 ? "(Works only on glitch components)"
                 : "(Funciona apenas em componentes com glitch)"}
             </p>
