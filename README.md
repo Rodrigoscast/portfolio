@@ -47,7 +47,7 @@ Ele é um universo digital onde o visitante pode:
 
 - JSON-Server (mock API para dados dinâmicos)
 
---
+
 
 > 🧠 Backend
 
@@ -88,9 +88,9 @@ Projeto	Descrição	Tecnologias
 
 | Projeto | Descrição |
 |-------|------------|
-| **🏥 Eva — Solução Unimed** | Sistema de agendamento médico com IA, criado em hackathon de 24h. |
-| **🧾 Sistema de Estoque Web** | Plataforma completa de controle de produtos e movimentações. |
-| **🎮 Ludoteca** | Reúne jogos clássicos como forca e jogo da velha em um só lugar |
+| **[🏥 Eva — Solução Unimed](https://github.com/Rodrigoscast/hackaton-2025)** | Sistema de agendamento médico com IA, criado em hackathon de 24h. |
+| **[🧾 Sistema de Estoque Web](https://github.com/Rodrigoscast/estoque-web)** | Plataforma completa de controle de produtos e movimentações. |
+| **[🎮 Ludoteca](https://my-ludoteca.netlify.app/)** | Reúne jogos clássicos como forca e jogo da velha em um só lugar |
 
 ---
 
@@ -105,15 +105,15 @@ Cada clique, cada som e cada animação têm um propósito: mostrar que desenvol
 
 ## 🧑‍💻 Autor
 
-Rodrigo Castro
+[Rodrigo Castro](https://my-ludoteca.netlify.app/)
 🎓 Engenheiro de Software | 💡 Full Stack Developer | 🎮 Criador Interativo
 > 💬 “Se dá pra sonhar, dá pra codar.”
 
 - 🌍 GitHub
 
-- 💼 LinkedIn
+- 💼 [LinkedIn](https://www.linkedin.com/in/rodrigo-castro-b09847243/)
 
-- 📧 rodrigoscast.dev@gmail.com
+- 📧 rodrigo.kontato@gmail.com
 
 ---
 
