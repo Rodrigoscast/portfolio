@@ -81,10 +81,6 @@ Ele é um universo digital onde o visitante pode:
 
 ## 🧩 Projetos em destaque
 Projeto	Descrição	Tecnologias
-🏥 Eva — Solução Unimed	Sistema de agendamento médico com IA, criado em hackathon de 24h.	Next.js · FastAPI · Supabase · Llama API
-📊 Malharia BI	Dashboard de controle de produção, com filtros, turnos e relatórios dinâmicos.	React · Shadcn · Recharts · API interna
-💼 Brasil Empreendimentos Cliente	App mobile para controle de contratos e parcelas.	React Native · Expo · Supabase
-🧾 Sistema de Estoque Web	Plataforma completa de controle de produtos e movimentações.	Next.js · Node.js · PostgreSQL
 
 | Projeto | Descrição |
 |-------|------------|
