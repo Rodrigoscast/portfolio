@@ -15,7 +15,7 @@ import CodeCard from '@/components/CardCode';
 import { motion } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
-import CassetteModel from "@/components/CassetteModel";
+import CoinModel from "@/components/CoinModel";
 import { Button } from '@/components/ui/button';
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 
@@ -179,7 +179,7 @@ export default function Home() {
                         <ambientLight intensity={0.5} />
                         <directionalLight position={[10, 10, 5]} intensity={1.5} />
                         <Environment preset="studio" />
-                        <CassetteModel onInsert={handleInsert} />
+                        <CoinModel onInsert={handleInsert} />
                     </Canvas>
                 </div>
             )}
