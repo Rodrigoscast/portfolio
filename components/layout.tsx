@@ -13,7 +13,7 @@ import CodeCard from '@/components/CardCode';
 import { motion } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
-import CassetteModel from "@/components/CassetteModel";
+import CoinModel from "@/components/CoinModel"
 import { Button } from '@/components/ui/button';
 import { useLanguage } from "@/contexts/LanguageContext";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
@@ -361,10 +361,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
              animate-gradient backdrop-blur-md"
         >
           <Canvas camera={{ position: [0, 1.5, 6], fov: 50 }} >
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 5]} intensity={1.5} />
-            {/* <Environment files="/hdr/studio_small_03_1k.hdr" background /> */}
-            <CassetteModel onInsert={handleInsert} />
+            <ambientLight intensity={1.5} />
+            <directionalLight position={[5, 10, 5]} intensity={2} />
+            <directionalLight position={[-5, 5, -2]} intensity={1.2} />
+            <Environment preset="studio" />
+            <CoinModel onInsert={handleInsert} />
           </Canvas>
         </div>
       )}

@@ -61,7 +61,7 @@ const ptProjects: Projeto[] = [
             "Um portfólio interativo e dinâmico, criado para mostrar meus projetos e habilidades com animações modernas, efeitos e temas dinâmicos, consumo de APIs e muito mais. Possui easter eggs e interações em tempo real.",
         tags: ["Next.js", "Framer Motion", "Shadcn/UI", "TailwindCSS", "API"],
         link: "https://github.com/Rodrigoscast/portfolio",
-        host: "https://rodrigo-castro.netlify.app/",
+        host: "https://rodrigoscastro.netlify.app/",
         imagem: "/img/portfolio.jpg",
     },
 ];
@@ -100,7 +100,7 @@ const enProjects: Projeto[] = [
             "An interactive and dynamic portfolio designed to showcase my projects and skills through modern animations, visual effects, dynamic themes, API integrations, and more. It also features Easter eggs and real-time interactions.",
         tags: ["Next.js", "Framer Motion", "Shadcn/UI", "TailwindCSS", "API"],
         link: "https://github.com/Rodrigoscast/portfolio",
-        host: "https://rodrigo-castro.netlify.app/",
+        host: "https://rodrigoscastro.netlify.app/",
         imagem: "/img/portfolio.jpg",
     },
 ];
