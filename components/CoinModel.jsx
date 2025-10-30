@@ -11,27 +11,17 @@ export default function CoinModel({ onInsert }) {
   const arcadeRef = useRef();
   const { viewport } = useThree();
 
-  // Deixa o material da moeda brilhante
-  useEffect(() => {
-    scene.traverse((child) => {
-      if (child.isMesh) {
-        child.material.metalness = 1;
-        child.material.roughness = 0.25;
-        child.material.emissive = new THREE.Color(0x111111);
-        child.material.emissiveIntensity = 0.3;
-      }
-    });
-  }, [scene]);
-
   const state = useRef({
-    y: 20,
+    y: 8,
     velocity: 0,
-    rotationSpeed: { x: 6, y: 2 },
+    rotationSpeed: { x: 0.02, z: 0.01 },
     phase: "falling",
     scale: 20,
     inserted: false,
     target: new THREE.Vector3(0, 1.2, -2),
     t: 0,
+    idleTime: 0,
+    bounceTime: 0,
     arcadeScale: 0,
     shakeTimer: 0,
     shakeActive: false,
@@ -44,61 +34,59 @@ export default function CoinModel({ onInsert }) {
 
     if (!coin) return;
 
-    if (s.phase === "falling" && s.y === 10) {
-      coin.position.set(0, s.y, 0);
-      coin.rotation.set(-Math.PI / 2, 0, 0); // de pé e alinhada
-    }
-
     switch (s.phase) {
       case "falling":
-        // 🪙 Cai com gravidade
-        s.velocity += -9.8 * delta * 0.8
+        // Cai com gravidade
+        s.velocity += -9.8 * delta * 0.5;
         s.y += s.velocity * delta;
-        coin.rotation.x += s.rotationSpeed.x * delta;
-        coin.rotation.y += s.rotationSpeed.y * delta;
+        coin.rotation.x += s.rotationSpeed.x;
+        coin.rotation.z += s.rotationSpeed.z;
 
         if (s.y <= 0) {
           s.y = 0;
-          s.velocity = 3;
+          s.velocity = 2.5;
+          s.bounceTime = 0;
           s.phase = "bounce";
         }
         break;
 
       case "bounce":
-        // 💥 pequeno quique
-        s.velocity -= 12 * delta;
-        s.y = Math.max(0, s.y + s.velocity * delta);
-        coin.rotation.x += 4 * delta;
+        // pequeno bounce
+        s.bounceTime += delta;
+          s.y = Math.max(0, Math.sin(s.bounceTime * 6) * 0.5);
 
-        if (s.y <= 0.05) {
-          s.y = 0.05;
-          s.phase = "idle";
-          // Alinha de pé e centraliza
-          coin.rotation.x = -Math.PI / 2;
-          coin.rotation.z = 0;
-        }
+          if (coin.rotation.x > -0.6) coin.rotation.x -= 1.5 * delta;
+          coin.rotation.z += Math.sin(s.bounceTime * 5) * 0.005;
+
+          if (s.bounceTime > Math.PI / 3) {
+              s.phase = "rest";
+              s.idleTime = 0;
+          }
         break;
 
       case "idle":
         // 💤 Parada, mas às vezes treme pra chamar atenção
-        coin.rotation.y += delta * 0.5;
+        s.idleTime += delta;
 
-        s.shakeTimer += delta;
-        if (!s.shakeActive && s.shakeTimer > 4) {
+        if (!s.shakeActive && s.shakeTimer > 5) {
           s.shakeActive = true;
+          s.idleTime = 0;
           s.shakeTimer = 0;
         }
 
         if (s.shakeActive) {
-          const shakeIntensity = 0.05;
-          coin.rotation.z = Math.sin(s.shakeTimer * 30) * shakeIntensity;
-          coin.position.x = Math.sin(s.shakeTimer * 40) * 0.03;
           s.shakeTimer += delta;
+          const shakeIntensity = 0.05;
+          const shakeSpeed = 30;
 
-          if (s.shakeTimer > 0.5) {
-            s.shakeActive = false;
-            coin.rotation.z = 0;
-            coin.position.x = 0;
+          coin.rotation.z = Math.sin(s.shakeTimer * shakeSpeed) * shakeIntensity;
+          coin.rotation.x = -0.5 + Math.sin(s.shakeTimer * shakeSpeed * 0.5) * shakeIntensity * 0.5;
+          coin.position.x = Math.sin(s.shakeTimer * shakeSpeed * 1.2) * 0.05;
+
+          if (s.shakeTimer > 0.4) {
+              s.shakeActive = false;
+              coin.rotation.z = 0;
+              coin.position.x = 0;
           }
         }
         break;
