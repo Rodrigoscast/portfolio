@@ -12,13 +12,16 @@ export default function CoinModel({ onInsert }) {
   const { viewport } = useThree();
 
   const state = useRef({
-    y: 8,
+    y: 4,
     velocity: 0,
-    rotationSpeed: { x: 0.02, z: 0.01 },
-    phase: "falling",
+    rotationSpeed: { x: 2, z: 0.1, y: 2 },
+    saveRot: { x: 0, y: 0, z: 0 },
+    savePos: { x: 0, y: 0, z: 0 },
+    phase: "start",
+    lastPhase: "",
     scale: 20,
     inserted: false,
-    target: new THREE.Vector3(0, 1.2, -2),
+    target: new THREE.Vector3(0, -2, -2),
     t: 0,
     idleTime: 0,
     bounceTime: 0,
@@ -35,38 +38,66 @@ export default function CoinModel({ onInsert }) {
     if (!coin) return;
 
     switch (s.phase) {
+      case "start":
+        coin.rotation.z = 0
+        coin.rotation.y = 0
+        coin.rotation.x = 0
+
+        s.phase = "falling";
+
       case "falling":
         // Cai com gravidade
-        s.velocity += -9.8 * delta * 0.5;
-        s.y += s.velocity * delta;
-        coin.rotation.x += s.rotationSpeed.x;
+        s.velocity += -9.8 * delta * 0.005;
+        s.y += s.velocity;
         coin.rotation.z += s.rotationSpeed.z;
+        coin.rotation.x += delta * 2;
 
         if (s.y <= 0) {
           s.y = 0;
-          s.velocity = 2.5;
-          s.bounceTime = 0;
-          s.phase = "bounce";
+          s.bounceTime = 0;          
+          s.lastPhase = "falling"
+          s.phase = "aligning";
         }
         break;
 
-      case "bounce":
-        // pequeno bounce
-        s.bounceTime += delta;
-          s.y = Math.max(0, Math.sin(s.bounceTime * 6) * 0.5);
+      case "aligning":
+        // Faz a moeda suavemente "assentar" no chão
+        s.y = THREE.MathUtils.lerp(s.y, 0, delta * 6);
 
-          if (coin.rotation.x > -0.6) coin.rotation.x -= 1.5 * delta;
-          coin.rotation.z += Math.sin(s.bounceTime * 5) * 0.005;
+        // Suaviza rotações e posição até centralizar
+        coin.rotation.x = THREE.MathUtils.lerp(coin.rotation.x, 0, delta * 3);
+        coin.rotation.y = THREE.MathUtils.lerp(coin.rotation.y, 0, delta * 3);
+        coin.rotation.z = THREE.MathUtils.lerp(coin.rotation.z, 0, delta * 3);
+        coin.position.x = THREE.MathUtils.lerp(coin.position.x, 0, delta * 3);
 
-          if (s.bounceTime > Math.PI / 3) {
-              s.phase = "idle";
-              s.idleTime = 0;
+        // Quando estiver quase centralizada e no chão, entra em idle
+        if (
+          Math.abs(coin.rotation.x) < 0.01 &&
+          Math.abs(coin.rotation.y) < 0.01 &&
+          Math.abs(coin.rotation.z) < 0.01 &&
+          Math.abs(s.y) < 0.01
+        ) {
+          s.saveRot.x = coin.rotation.x;
+          s.saveRot.y = coin.rotation.y;
+          s.saveRot.z = coin.rotation.z;
+
+          s.savePos.x = coin.position.x;
+          s.savePos.y = coin.position.y;
+          s.savePos.z = coin.position.z;
+
+          if (s.lastPhase == "falling") {
+            s.phase = "idle";
+          } else {
+            s.phase = "fly"
           }
+        }
         break;
 
       case "idle":
-        // 💤 Parada, mas às vezes treme pra chamar atenção
+        // Parada, mas às vezes treme pra chamar atenção
         s.idleTime += delta;
+        s.shakeTimer += delta;
+        coin.rotation.y += delta * 2;
 
         if (!s.shakeActive && s.shakeTimer > 5) {
           s.shakeActive = true;
@@ -76,23 +107,26 @@ export default function CoinModel({ onInsert }) {
 
         if (s.shakeActive) {
           s.shakeTimer += delta;
-          const shakeIntensity = 0.05;
-          const shakeSpeed = 30;
+          const shakeIntensity = 0.15;
+          const shakeSpeed = 40;
 
-          coin.rotation.z = Math.sin(s.shakeTimer * shakeSpeed) * shakeIntensity;
-          coin.rotation.x = -0.5 + Math.sin(s.shakeTimer * shakeSpeed * 0.5) * shakeIntensity * 0.5;
-          coin.position.x = Math.sin(s.shakeTimer * shakeSpeed * 1.2) * 0.05;
+          const offset = Math.sin(s.shakeTimer * shakeSpeed) * shakeIntensity;
+          coin.position.x = s.savePos.x + offset;
+
+          coin.rotation.y = s.saveRot.y + Math.sin(s.shakeTimer * shakeSpeed * 1.5) * 0.1;
 
           if (s.shakeTimer > 0.4) {
-              s.shakeActive = false;
-              coin.rotation.z = 0;
-              coin.position.x = 0;
+            coin.position.x = THREE.MathUtils.lerp(coin.position.x, s.savePos.x, delta * 15);
+            coin.rotation.y = THREE.MathUtils.lerp(coin.rotation.y, s.saveRot.y, delta * 15);
+
+            s.shakeTimer = 0;
+            s.shakeActive = false;
           }
         }
         break;
 
       case "fly":
-        // 🚀 voo até o arcade
+        // voo até o arcade
         s.t += delta * 0.5; // mais devagar → animação longa e suave
         s.t = Math.min(s.t, 1);
         const pos = new THREE.Vector3().lerpVectors(
@@ -102,12 +136,12 @@ export default function CoinModel({ onInsert }) {
         );
 
         coin.position.copy(pos);
-        coin.rotation.x += 10 * delta;
-        coin.rotation.y += 8 * delta;
-        s.scale = Math.max(25 - s.t * 20, 5);
+        coin.rotation.x -= 0.4;
+        // coin.rotation.y += 8 * delta;
+        s.scale = Math.max(25 - s.t * 20, 2);
         coin.scale.setScalar(s.scale);
 
-        // 🎰 Máquina crescendo bem devagar
+        // Máquina crescendo bem devagar
         s.arcadeScale = THREE.MathUtils.lerp(s.arcadeScale, 0.8, delta * 0.1);
         if (arcadeObj) arcadeObj.scale.setScalar(s.arcadeScale);
 
@@ -127,8 +161,9 @@ export default function CoinModel({ onInsert }) {
 
   const handleClick = () => {
     const s = state.current;
-    if (s.phase === "idle") {
-      s.phase = "fly";
+    if(s.phase != "fly"){
+      s.lastPhase = "idle"
+      s.phase = "aligning";
       s.t = 0;
     }
   };
