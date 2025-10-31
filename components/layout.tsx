@@ -370,21 +370,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {doom && (
-        <div
-          className="fixed inset-0 z-[999999] flex items-center justify-center backdrop-blur-sm bg-black/60"
+      <div
+        className={`fixed inset-0 z-[999999] flex items-center justify-center backdrop-blur-sm bg-black/60 ${!doom && 'hidden'}`}
+      >
+        <PacMan />
+        <Button
+          variant={'destructive'}
+          size={'icon'}
+          onClick={() => setDoom(false)}
+          className='cursor-pointer absolute top-10 right-10'
         >
-          <PacMan />
-          <Button
-            variant={'destructive'}
-            size={'icon'}
-            onClick={() => setDoom(false)}
-            className='cursor-pointer absolute top-10 right-10'
-          >
-            <X className='!w-8 !h-8' />
-          </Button>
-        </div>
-      )}
+          <X className='!w-8 !h-8' />
+        </Button>
+      </div>
 
       <Dialog open={devDialog} onOpenChange={setDevDialog}>
         <DialogContent
