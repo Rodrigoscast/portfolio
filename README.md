@@ -5,6 +5,8 @@
 Um espaço vivo, criativo e totalmente interativo, que reflete minha jornada como Engenheiro de Software, Desenvolvedor Full Stack e criador apaixonado por tecnologia e design.
 Cada detalhe deste portfólio foi pensado para unir arte, código e propósito — com easter eggs, modos secretos e uma atmosfera que conversa com quem ama tecnologia de verdade.
 
+🌍 Acesse: [Rodrigo Castro](https://rodrigoscastro.netlify.app/)
+
 ---
 
 ## 🌌 Sobre o projeto
