@@ -29,7 +29,7 @@ export async function GET() {
     },
     exemplo: {
       frontend: [
-        readFileSafe(path.join(base, "ui", "Button.tsx")),
+        readFileSafe(path.join(base, "ui", "button.tsx")),
       ],
     },
     kame: {
