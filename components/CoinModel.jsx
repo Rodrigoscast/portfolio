@@ -59,7 +59,7 @@ export default function CoinModel({ onInsert }) {
           coin.rotation.z += Math.sin(s.bounceTime * 5) * 0.005;
 
           if (s.bounceTime > Math.PI / 3) {
-              s.phase = "rest";
+              s.phase = "idle";
               s.idleTime = 0;
           }
         break;
