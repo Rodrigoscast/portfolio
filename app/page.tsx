@@ -398,7 +398,7 @@ export default function Home() {
                 transition={{ delay: 2, duration: 0.8 }}
               >
                 <a
-                  href="https://www.linkedin.com/in/rodrigo-castro-b09847243/"
+                  href="https://www.linkedin.com/in/rodrigosilvacastro/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-12 h-12 cursor-pointer"
@@ -481,7 +481,7 @@ export default function Home() {
               e.preventDefault();
               if(devMode) abreDev("secret");
             }}
-            className={`absolute ${dica ? 'w-70' : 'w-10'} right-0 bottom-25 transition-all duration-300 ease-in-out z-10 glitch`}
+            className={`absolute ${dica ? 'w-70' : 'w-10'} right-0 bottom-100 transition-all duration-300 ease-in-out z-10 glitch`}
           >
             <div className="bg-[#FAEDCF] dark:bg-[#3F2F07] rounded-l-lg p-2 flex flex-row cursor-pointer" onClick={() => setDica(!dica)}>
               <ChevronLeft className={`${dica && 'rotate-180'} transition-all duration-300 ease-in-out`} />
