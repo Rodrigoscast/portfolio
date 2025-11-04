@@ -39,7 +39,10 @@ export function ThemeToggle() {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "bypass-tunnel-reminder": '1'
+        },
         body: JSON.stringify({
             cod_visit: sessionId,
             campo: "tema",
