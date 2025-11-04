@@ -243,7 +243,7 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                                     style={{ width: 65, height: 65 }}
                                                 />
                                                 <span className="text-base font-medium">
-                                                    {translates[cat.nome] || cat.nome}
+                                                    {lang == 'pt' ? cat.nome : translates[cat.nome] || cat.nome}
                                                 </span>
                                             </div>
                                         </motion.div>
@@ -298,7 +298,7 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                                             alt={item}
                                                         />
                                                     )}
-                                                    <span>{translates[item] || item}</span>
+                                                    <span>{lang == 'pt' ? item : translates[item] || item}</span>
                                                 </div>
                                             );
                                         })
@@ -349,7 +349,7 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                                                 alt={sub.nome}
                                                             />
                                                         )}
-                                                        <h3 className="font-semibold text-lg flex flex-col">{translates[sub.nome] || sub.nome}</h3>
+                                                        <h3 className="font-semibold text-lg flex flex-col">{lang == 'pt' ? sub.nome : translates[sub.nome] || sub.nome}</h3>
                                                     </div>
 
                                                     <div className={`flex flex-wrap gap-4 justify-center w-full`}>
@@ -364,7 +364,7 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                                                             shadow-md flex flex-col items-center justify-center gap-2
                                                                             hover:shadow-xl hover:scale-105 transition-transform"
                                                                     >
-                                                                        <span className="text-center">{translates[skill] || skill}</span>
+                                                                        <span className="text-center">{lang == 'pt' ? skill : translates[skill] || skill}</span>
                                                                     </div>
                                                                 );
 
@@ -392,7 +392,7 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                                                                 alt={skill}
                                                                             />
                                                                         )}
-                                                                        <span className="text-center">{translates[skill] || skill}</span>
+                                                                        <span className="text-center">{lang == 'pt' ? skill : translates[skill] || skill}</span>
                                                                     </div>
                                                                 );
                                                             }
