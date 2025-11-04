@@ -25,8 +25,29 @@ export function ThemeToggle() {
   const current = theme === "system" ? systemTheme : theme;
   const isDark = current === "dark";
 
-  const alternarTema = () => {
+  const alternarTema = async () => {
     setTheme(isDark ? "light" : "dark");
+
+    // pega o id salvo no localStorage
+    const sessionId = localStorage.getItem("session_id");
+
+    if (!sessionId) {
+        console.warn("Nenhuma sessão encontrada!");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            cod_visit: sessionId,
+            campo: "tema",
+        }),
+        });
+    } catch (error) {
+        console.error("Erro na requisição:", error);
+    }
   };
 
   return (

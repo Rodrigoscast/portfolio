@@ -53,6 +53,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { theme, systemTheme } = useTheme();
   const currentTheme = theme === "system" ? systemTheme : theme;
   const isDark = currentTheme === "dark";
+  const [sessao, setSessao] = useState(true)
 
   const lottieRefhover = useRef<LottieRefCurrentProps>(null);
   const lottieRefmusic = useRef<LottieRefCurrentProps>(null);
@@ -66,6 +67,34 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   } = useLanguage();
 
   const [attComp, setAttComp] = useState(0)
+
+  // inicia sessão
+  useEffect(() => {
+    async function newSession() {
+      // pega o id salvo no localStorage
+      const sessionId = localStorage.getItem("session_id");
+
+      if (sessionId || !sessao) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views/create_session`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" }
+        });
+
+        const data = await res.json();
+        setSessao(false)
+
+        localStorage.setItem("session_id", data.id);
+      } catch (error) {
+        console.error("Erro ao criar sessão:", error);
+      }
+    }
+
+    newSession();
+  }, []);
 
   const secretCode = [
     "arrowup",
@@ -170,9 +199,30 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     setTape(true)
   };
 
-  const handleInsert = () => {
-    setTape(false)
-    setDoom(true)
+  const handleInsert = async () => {
+    setTape(false);
+    setDoom(true);
+
+    // pega o id salvo no localStorage
+    const sessionId = localStorage.getItem("session_id");
+
+    if (!sessionId) {
+      console.warn("Nenhuma sessão encontrada!");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cod_visit: sessionId,
+          campo: "pacman",
+        }),
+      });
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
   };
 
   useEffect(() => {

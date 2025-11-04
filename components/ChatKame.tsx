@@ -44,7 +44,7 @@ export default function ChatKame() {
     
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-      }, [setKame]);
+    }, [setKame]);
 
     // Carrega histórico
     useEffect(() => {
@@ -77,14 +77,37 @@ export default function ChatKame() {
         }
     }, [mensagens]);
 
+    const setView = async() => {
+        // pega o id salvo no localStorage
+        const sessionId = localStorage.getItem("session_id");
+
+        if (!sessionId) {
+            console.warn("Nenhuma sessão encontrada!");
+            return;
+        }
+
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                cod_visit: sessionId,
+                campo: "kame",
+            }),
+            });
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+        }
+    }
+
     async function enviarMensagem() {
         if (!texto.trim()) return;
 
         const novaMensagem: Mensagem = { autor: "user", texto };
         setMensagens((prev) => [...prev, novaMensagem]);
         setTexto("");
-        setDigitando(true);
-
+        setDigitando(true);        
+        
         try {
             const res = await fetch("/api/kame", {
                 method: "POST",
@@ -98,6 +121,8 @@ export default function ChatKame() {
             setDigitando(false);
 
             setMensagens((prev) => [...prev, { autor: "kame", texto: resposta }]);
+
+            setView()
         } catch (err) {
             setMensagens((prev) => [
                 ...prev,

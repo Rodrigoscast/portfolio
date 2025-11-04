@@ -37,15 +37,68 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     setDevCodeModal(true)
   }
 
+  const setView = async(campo: string) => {
+    // pega o id salvo no localStorage
+    const sessionId = localStorage.getItem("session_id");
+
+    if (!sessionId) {
+      console.warn("Nenhuma sessão encontrada!");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cod_visit: sessionId,
+          campo: campo,
+        }),
+      });
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
+  }
+
+  useEffect(() => {
+    if(devMode){
+      setView('devmode')
+    }
+    if(info){
+      setView('musica')
+    }
+  }, [devMode, info])
+
   useEffect(() => {
     const saved = localStorage.getItem("language");
     if (saved === "en" || saved === "pt") setLang(saved);
   }, []);
 
-  const toggleLanguage = () => {
+  const toggleLanguage = async() => {
     const newLang = lang === "pt" ? "en" : "pt";
     setLang(newLang);
     localStorage.setItem("language", newLang);
+
+    // pega o id salvo no localStorage
+    const sessionId = localStorage.getItem("session_id");
+
+    if (!sessionId) {
+        console.warn("Nenhuma sessão encontrada!");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            cod_visit: sessionId,
+            campo: "linguagem",
+        }),
+        });
+    } catch (error) {
+        console.error("Erro na requisição:", error);
+    }
   };
 
   return (

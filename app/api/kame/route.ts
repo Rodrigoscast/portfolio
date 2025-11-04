@@ -145,7 +145,7 @@ Caso nenhuma parte se encaixe, recuse educadamente.
     });
 
     const data = await res.json();
-    const resposta = data?.choices?.[0]?.message?.content || "Erro ao gerar resposta 😅";
+    const resposta = data?.choices?.[0]?.message?.content || data;
 
     return NextResponse.json({ resposta });
   } catch (err: any) {
