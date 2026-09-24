@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-export function useClima() {
+export function useClima(enabled = true) {
   const [clima, setClima] = useState<any>(null);
   const [erro, setErro] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ export function useClima() {
 
   // Atualiza data/hora em tempo real
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient || !enabled) return;
 
     function atualizarHora() {
       const agora = new Date();
@@ -47,11 +47,11 @@ export function useClima() {
     atualizarHora();
     const interval = setInterval(atualizarHora, 1000);
     return () => clearInterval(interval);
-  }, [lang, isClient]);
+  }, [lang, isClient, enabled]);
 
   // Busca o clima
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient || !enabled) return;
 
     async function getClima() {
       try {
@@ -102,7 +102,7 @@ export function useClima() {
     }
 
     getClima();
-  }, [lang, isClient]);
+  }, [lang, isClient, enabled]);
 
   return { clima, erro, loading, dataHora };
 }

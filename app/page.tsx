@@ -39,12 +39,12 @@ import {
 } from "@/components/ui/select"
 
 export default function Home() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const glowRef = useRef<HTMLDivElement>(null);
   const { theme, systemTheme } = useTheme();
   const { lang, sequence, setSequence, info, setInfo, kame, setKame, devMode, setDevMode, 
           abreDev, devCode, setDevCode, devCodeModal, setDevCodeModal 
   } = useLanguage();  
-  const { clima, erro, loading, dataHora } = useClima();
+  const { clima, erro, loading, dataHora } = useClima(info);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5);
   const [isMuted, setIsMuted] = useState(false);
@@ -228,7 +228,11 @@ export default function Home() {
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+      const glow = glowRef.current;
+      if (!glow) return;
+
+      glow.style.setProperty("--mouse-x", `${e.clientX - 300}px`);
+      glow.style.setProperty("--mouse-y", `${e.clientY - 300}px`);
     };
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
@@ -301,9 +305,10 @@ export default function Home() {
     <main className="relative min-h-screen bg-background overflow-hidden transition-colors duration-300">
       {/* Glow que segue o mouse - pointer-events-none garantido */}
       <div
+        ref={glowRef}
         className="pointer-events-none absolute w-[600px] h-[600px] rounded-full blur-[150px] opacity-40 transition-transform duration-300 ease-out z-0"
         style={{
-          transform: `translate(${position.x - 300}px, ${position.y - 300}px)`,
+          transform: "translate(var(--mouse-x, -300px), var(--mouse-y, -300px))",
           background:
             "radial-gradient(circle at center, var(--gradient-glow-from), var(--gradient-glow-to) 70%, transparent 100%)",
         }}
@@ -468,7 +473,7 @@ export default function Home() {
         </section>
 
         <section
-          className="text-foreground flex items-center justify-center min-h-screen"
+          className="content-visibility-auto text-foreground flex items-center justify-center min-h-screen"
           id="code"
         >
           <div className="w-full h-full" >
@@ -477,7 +482,7 @@ export default function Home() {
         </section>
 
         <section
-          className="text-foreground flex items-center justify-center min-h-screen"
+          className="content-visibility-auto text-foreground flex items-center justify-center min-h-screen"
           id="projects"
         >
           <div className="w-full h-full" >
@@ -486,7 +491,7 @@ export default function Home() {
         </section>
 
         <section
-          className="text-foreground flex items-start justify-center min-h-screen relative"
+          className="content-visibility-auto text-foreground flex items-start justify-center min-h-screen relative"
           id="contact"
         >
           <div className="w-full h-full" >

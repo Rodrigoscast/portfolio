@@ -156,6 +156,11 @@ html {
   scroll-behavior: smooth;
 }
 
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 100vh;
+}
+
 ::-webkit-scrollbar {
     width: 0px;
 }

@@ -47,7 +47,7 @@ export default function CoinModel({ onInsert }) {
 
       case "falling":
         // Cai com gravidade
-        s.velocity += -9.8 * delta * 0.005;
+        s.velocity += -9.8 * delta * 0.05;
         s.y += s.velocity;
         coin.rotation.z += s.rotationSpeed.z;
         coin.rotation.x += delta * 2;

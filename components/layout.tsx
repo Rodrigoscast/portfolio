@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 import { useTheme } from "next-themes";
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'
 import { LanguageSwitch } from "@/components/LanguageSwitch";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Music, House, Code2, FolderGit2, MessageSquareMoreIcon, X } from "lucide-react"
@@ -427,20 +426,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {/* PacMan overlay - only when active */}
-      <div
-        className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/60 ${!doom && 'hidden'}`}
-      >
-        <PacMan />
-        <Button
-          variant={'destructive'}
-          size={'icon'}
-          onClick={() => setDoom(false)}
-          className='cursor-pointer absolute top-10 right-10'
-        >
-          <X className='!w-8 !h-8' />
-        </Button>
-      </div>
+      {/* PacMan só é montado quando o overlay está ativo para não carregar o jogo no início. */}
+      {doom && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/60">
+          <PacMan />
+          <Button
+            variant={'destructive'}
+            size={'icon'}
+            onClick={() => setDoom(false)}
+            className='cursor-pointer absolute top-10 right-10'
+          >
+            <X className='!w-8 !h-8' />
+          </Button>
+        </div>
+      )}
 
       <Dialog open={devDialog} onOpenChange={setDevDialog}>
         <DialogContent
