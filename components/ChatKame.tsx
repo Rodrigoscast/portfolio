@@ -11,6 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import kameReveal from "@/public/icons/kame-reveal.json";
 import { useLanguage } from "@/contexts/LanguageContext";
 import ReactMarkdown from "react-markdown";
+import { registerView } from "@/lib/analytics";
 
 interface Mensagem {
     autor: "user" | "kame";
@@ -18,36 +19,41 @@ interface Mensagem {
 }
 
 export default function ChatKame() {
-    const { lang, kame, setKame } = useLanguage();
+    const { lang, kame, setKame, abreDev, devMode } = useLanguage();
     const [mensagens, setMensagens] = useState<Mensagem[]>([]);
     const [texto, setTexto] = useState("");
     const lottieRef = useRef<any>(null);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
     const [digitando, setDigitando] = useState(false);
     const refKame = useRef<HTMLDivElement>(null);
+    const [isClient, setIsClient] = useState(false);
 
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
           const target = event.target as HTMLElement
-    
+
           if (
             target.closest(".ignore-close-kame")
           ) {
             return;
           }
-    
+
           if (refKame.current && !refKame.current.contains(event.target as Node)) {
             setKame(false);
           }
         }
-    
+
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [setKame]);
 
     // Carrega histórico
     useEffect(() => {
+        if (!isClient) return;
         const salvo = localStorage.getItem("chatKame");
         if (salvo && salvo != '[]') {
             setMensagens(JSON.parse(salvo));
@@ -62,10 +68,11 @@ export default function ChatKame() {
             setMensagens(inicial);
             localStorage.setItem("chatKame", JSON.stringify(inicial));
         }
-    }, []);
+    }, [isClient]);
 
     // Salva histórico e rola pro fim
     useEffect(() => {
+        if (!isClient) return;
         localStorage.setItem("chatKame", JSON.stringify(mensagens));
         const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
         if (viewport) {
@@ -75,7 +82,7 @@ export default function ChatKame() {
                 behavior: "smooth",
             });
         }
-    }, [mensagens]);
+    }, [mensagens, isClient]);
 
     const setView = async() => {
         // pega o id salvo no localStorage
@@ -87,17 +94,7 @@ export default function ChatKame() {
         }
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views`, {
-            method: "PUT",
-            headers: { 
-                "Content-Type": "application/json",
-                "bypass-tunnel-reminder": '1'
-            },
-            body: JSON.stringify({
-                cod_visit: sessionId,
-                campo: "kame",
-            }),
-            });
+            await registerView(sessionId, "kame");
         } catch (error) {
             console.error("Erro na requisição:", error);
         }
@@ -117,6 +114,8 @@ export default function ChatKame() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ mensagem: texto }),
             });
+
+            if (!res.ok) throw new Error(`Kame request failed: ${res.status}`);
 
             const data = await res.json();
             const resposta = data.resposta || "Desculpe, algo deu errado 😅";
@@ -148,7 +147,13 @@ export default function ChatKame() {
             initial={{ opacity: 0, y: 400 }}
             animate={kame ? { opacity: 1, y: 0 } : { opacity: 0, y: 400 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="absolute bottom-0 right-14 flex flex-col items-center justify-center"
+            onContextMenu={(event) => {
+                event.preventDefault();
+                if (devMode) abreDev("kame");
+            }}
+            className={`absolute bottom-0 right-14 flex flex-col items-center justify-center ${
+                kame ? "pointer-events-auto" : "pointer-events-none"
+            } ${devMode && kame ? "glitch" : ""}`}
         >
             <Card className="bg-card/60 border-border w-96 max-h-[90vh] pt-1 shadow-xl rounded-t-2xl rounded-b-none backdrop-blur-md overflow-hidden flex flex-col">
                 <CardContent className="flex flex-col h-full px-2 gap-3">
@@ -199,7 +204,7 @@ export default function ChatKame() {
                         </div>
                     </ScrollArea>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 relative z-20">
                         <Input
                             placeholder={lang == 'pt' ? "Fale com o Kame..." : "Talk to Kame..."}
                             value={texto}

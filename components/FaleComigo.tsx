@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PowerGlitch } from "powerglitch";
@@ -15,7 +15,7 @@ export default function FaleComigo({
     ref,
 }: {
     visivel: boolean;
-    ref: any;
+    ref: React.Ref<HTMLDivElement>;
 }) {
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
@@ -50,7 +50,11 @@ export default function FaleComigo({
                 body: JSON.stringify(form),
             });
 
-            const data = await res.json();
+            if (!res.ok && res.status !== 429) {
+                throw new Error(`Email request failed: ${res.status}`);
+            }
+
+            await res.json();
 
             if (res.status === 200) {
                 toast.success(
@@ -96,7 +100,7 @@ export default function FaleComigo({
                     abreDev('mensagem')
                 }
             }}
-            className={`w-full max-w-lg mx-auto flex flex-col gap-6 bg-sidebar border border-border p-8 rounded-2xl shadow-lg mt-10 ${devMode && ('glitch')}`}
+            className={`w-full max-w-lg mx-auto flex flex-col gap-6 bg-sidebar border border-border p-8 rounded-2xl shadow-lg mt-10 ${visivel ? "pointer-events-auto" : "pointer-events-none"} ${devMode ? "glitch" : ""}`}
         >
             <motion.h2
                 initial={{ opacity: 0, scale: 0.2 }}
@@ -117,6 +121,7 @@ export default function FaleComigo({
                     placeholder={lang == 'pt' ? "Seu Nome" : "Your Name"}
                     value={form.nome}
                     onChange={(e) => setForm({ ...form, nome: e.target.value })}
+                    className="relative z-20"
                 />
             </motion.div>
 
@@ -130,6 +135,7 @@ export default function FaleComigo({
                     placeholder={lang == 'pt' ? "Seu e-mail" : "Your Email"}
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    className="relative z-20"
                 />
             </motion.div>
 
@@ -142,7 +148,7 @@ export default function FaleComigo({
                     placeholder={lang == 'pt' ? "Escreva sua mensagem..." : "Type your message..."}
                     value={form.mensagem}
                     onChange={(e) => setForm({ ...form, mensagem: e.target.value })}
-                    className="min-h-[120px]"
+                    className="min-h-[120px] relative z-20"
                 />
             </motion.div>
 

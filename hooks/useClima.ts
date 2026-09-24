@@ -10,9 +10,16 @@ export function useClima() {
     hora: "",
   });
   const { lang } = useLanguage();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Atualiza data/hora em tempo real
   useEffect(() => {
+    if (!isClient) return;
+
     function atualizarHora() {
       const agora = new Date();
 
@@ -40,14 +47,17 @@ export function useClima() {
     atualizarHora();
     const interval = setInterval(atualizarHora, 1000);
     return () => clearInterval(interval);
-  }, [lang]);
+  }, [lang, isClient]);
 
   // Busca o clima
   useEffect(() => {
+    if (!isClient) return;
+
     async function getClima() {
       try {
         const fetchClima = async (url: string) => {
           const res = await fetch(url);
+          if (!res.ok) throw new Error(`Weather request failed: ${res.status}`);
           const data = await res.json();
 
           // 🔁 Tradução automática
@@ -92,7 +102,7 @@ export function useClima() {
     }
 
     getClima();
-  }, [lang]);
+  }, [lang, isClient]);
 
   return { clima, erro, loading, dataHora };
 }

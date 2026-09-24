@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PowerGlitch } from "powerglitch";
+import { registerView } from "@/lib/analytics";
 
 export function ThemeToggle() {
   const { theme, setTheme, systemTheme } = useTheme();
@@ -37,17 +38,7 @@ export function ThemeToggle() {
     }
 
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views`, {
-        method: "PUT",
-        headers: { 
-          "Content-Type": "application/json",
-          "bypass-tunnel-reminder": '1'
-        },
-        body: JSON.stringify({
-            cod_visit: sessionId,
-            campo: "tema",
-        }),
-        });
+        await registerView(sessionId, "tema");
     } catch (error) {
         console.error("Erro na requisição:", error);
     }

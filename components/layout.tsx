@@ -3,10 +3,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useTheme } from "next-themes";
 import { ThemeToggle } from '@/components/ThemeToggle'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { LanguageSwitch } from "@/components/LanguageSwitch";
-import 'react-toastify/dist/ReactToastify.css'
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Music, House, Code2, FolderGit2, MessageSquareMoreIcon, X } from "lucide-react"
 import CodeCard from '@/components/CardCode';
@@ -18,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from "@/contexts/LanguageContext";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import PacMan from '@/components/PacMan';
+import { registerSession, registerView } from '@/lib/analytics';
 
 import kameHover from "@/public/icons/kame-hover.json";
 import glasses from "@/public/icons/linguagem.json";
@@ -51,9 +51,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [doom, setDoom] = useState(false)
   const [activeSection, setActiveSection] = useState<string>("home");
   const { theme, systemTheme } = useTheme();
-  const currentTheme = theme === "system" ? systemTheme : theme;
-  const isDark = currentTheme === "dark";
+  const [isClient, setIsClient] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const [sessao, setSessao] = useState(true)
+
+  useEffect(() => {
+    setIsClient(true);
+    const currentTheme = theme === "system" ? systemTheme : theme;
+    setIsDark(currentTheme === "dark");
+  }, [theme, systemTheme])
 
   const lottieRefhover = useRef<LottieRefCurrentProps>(null);
   const lottieRefmusic = useRef<LottieRefCurrentProps>(null);
@@ -79,18 +85,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       }
 
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views/create_session`, {
-          method: "GET",
-          headers: { 
-            "Content-Type": "application/json",
-            "bypass-tunnel-reminder": '1'
-          }
-        });
+        const sessionId = await registerSession();
+        setSessao(false);
 
-        const data = await res.json();
-        setSessao(false)
-
-        localStorage.setItem("session_id", data.id);
+        if (sessionId) localStorage.setItem("session_id", sessionId);
       } catch (error) {
         console.error("Erro ao criar sessão:", error);
       }
@@ -158,6 +156,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+
+      if (
+        target?.closest(
+          'input, textarea, select, [contenteditable="true"], [contenteditable=""]'
+        )
+      ) {
+        return;
+      }
+
       const key = event.key.toLowerCase();
 
       // Limpa timeout anterior
@@ -172,7 +180,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       if (!isCorrectSoFar) {
         // tecla errada → reseta
-        setSequence([]);
+        if (sequence.length > 0) setSequence([]);
         return;
       }
 
@@ -215,17 +223,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views`, {
-        method: "PUT",
-        headers: { 
-          "Content-Type": "application/json",
-          "bypass-tunnel-reminder": '1'
-        },
-        body: JSON.stringify({
-          cod_visit: sessionId,
-          campo: "pacman",
-        }),
-      });
+      await registerView(sessionId, "pacman");
     } catch (error) {
       console.error("Erro na requisição:", error);
     }
@@ -268,13 +266,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-full bg-gray-100 dark:bg-sidebar text-gray-800 dark:text-gray-100 w-full">
-      <ToastContainer position="top-right" autoClose={3000} className='!z-999999' />
+      {/* ToastContainer com z-index razoável - não 999999 */}
+      <ToastContainer position="top-right" autoClose={3000} className='z-[100]' />
+
       <div className="flex-1 flex flex-col">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 2.4, duration: 0.8 }}
-          className='fixed left-3 top-1/2 -translate-y-1/2 z-15 flex flex-col flex rounded-full bg-white dark:bg-sidebar text-sm font-medium text-base-800 shadow-[5px_0_20px_rgba(0,0,0,0.15)] shadow-base-800/5 dark:shadow-gray-600 h-12/20 px-2 py-3 justify-around items-center'
+          className='fixed left-3 top-1/2 -translate-y-1/2 z-10 flex flex-col flex rounded-full bg-white dark:bg-sidebar text-sm font-medium text-base-800 shadow-[5px_0_20px_rgba(0,0,0,0.15)] shadow-base-800/5 dark:shadow-gray-600 h-12/20 px-2 py-3 justify-around items-center'
         >
 
           <ThemeToggle />
@@ -355,7 +355,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         </motion.div>
         <header
-          className={`fixed top-0 z-15 w-full flex justify-center pt-4 transition-transform duration-300 translate-y-0`}
+          className={`fixed top-0 z-10 w-full flex justify-center pt-4 transition-transform duration-300 translate-y-0`}
         >
           <motion.div
             initial={{ opacity: 0, y: -50 }}
@@ -405,14 +405,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </motion.div>
         </header>
-        <main className='h-full'>
+        <main className='h-full relative z-0'>
           {children}
         </main>
       </div>
 
+      {/* Tape/coin overlay - only when active, with proper z-index */}
       {tape && (
         <div
-          className="fixed inset-0 z-[999999] flex items-center justify-center 
+          className="fixed inset-0 z-50 flex items-center justify-center
              bg-gradient-to-br from-[rgba(15,12,41,0.7)] via-[rgba(48,43,99,0.7)] to-[rgba(36,36,62,0.7)]
              animate-gradient backdrop-blur-md"
         >
@@ -426,8 +427,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
+      {/* PacMan overlay - only when active */}
       <div
-        className={`fixed inset-0 z-[999999] flex items-center justify-center backdrop-blur-sm bg-black/60 ${!doom && 'hidden'}`}
+        className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/60 ${!doom && 'hidden'}`}
       >
         <PacMan />
         <Button

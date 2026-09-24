@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
+import { registerView } from "@/lib/analytics";
 
 type Lang = "pt" | "en";
 
@@ -31,6 +32,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [devMode, setDevMode] = useState(false)
   const [devCode, setDevCode] = useState('');
   const [devCodeModal, setDevCodeModal] = useState(false)
+  const [isClient, setIsClient] = useState(false);
 
   const abreDev = (nome: string) => {
     setDevCode(nome)
@@ -47,17 +49,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views`, {
-        method: "PUT",
-        headers: { 
-          "Content-Type": "application/json",
-          "bypass-tunnel-reminder": '1'
-        },
-        body: JSON.stringify({
-          cod_visit: sessionId,
-          campo: campo,
-        }),
-      });
+      await registerView(sessionId, campo);
     } catch (error) {
       console.error("Erro na requisição:", error);
     }
@@ -73,6 +65,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   }, [devMode, info])
 
   useEffect(() => {
+    setIsClient(true);
     const saved = localStorage.getItem("language");
     if (saved === "en" || saved === "pt") setLang(saved);
   }, []);
@@ -80,7 +73,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const toggleLanguage = async() => {
     const newLang = lang === "pt" ? "en" : "pt";
     setLang(newLang);
-    localStorage.setItem("language", newLang);
+    if (isClient) {
+      localStorage.setItem("language", newLang);
+    }
 
     // pega o id salvo no localStorage
     const sessionId = localStorage.getItem("session_id");
@@ -91,25 +86,15 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/views`, {
-        method: "PUT",
-        headers: { 
-          "Content-Type": "application/json",
-          "bypass-tunnel-reminder": '1'
-        },
-        body: JSON.stringify({
-            cod_visit: sessionId,
-            campo: "linguagem",
-        }),
-        });
+        await registerView(sessionId, "linguagem");
     } catch (error) {
         console.error("Erro na requisição:", error);
     }
   };
 
   return (
-    <LanguageContext.Provider value={{ 
-      lang, toggleLanguage, sequence, setSequence, 
+    <LanguageContext.Provider value={{
+      lang, toggleLanguage, sequence, setSequence,
       info, setInfo, kame, setKame, devMode, setDevMode,
       abreDev, devCode, setDevCode, devCodeModal, setDevCodeModal
     }}>

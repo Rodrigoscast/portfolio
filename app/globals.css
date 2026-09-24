@@ -128,6 +128,26 @@
   }
 }
 
+/* Fix para inputs não receberem texto - garante que inputs/textarea sempre tenham prioridade */
+input, textarea, select {
+  position: relative;
+  z-index: 10;
+}
+
+input:focus, textarea:focus, select:focus {
+  z-index: 20;
+}
+
+/* Garante que overlays com pointer-events-none não bloqueiem */
+.pointer-events-none {
+  pointer-events: none !important;
+}
+
+/* ScrollArea viewport não deve bloquear inputs */
+[data-radix-scroll-area-viewport] {
+  z-index: 1;
+}
+
 html {
   scroll-behavior: smooth;
 }

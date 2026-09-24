@@ -304,11 +304,18 @@ function Game(id,params){
         if(!_events[eventType]){
             _events[eventType] = {};
             window.addEventListener(eventType,function(e){
+                if (e.target && e.target.closest && e.target.closest('input, textarea, select, [contenteditable="true"], [contenteditable=""]')) {
+                    return;
+                }
+
                 var key = 's' + _index;
                 if(_events[eventType][key]){
                     _events[eventType][key](e);
                 }
-                e.preventDefault();
+
+                if (eventType === 'keydown' && [13, 32, 37, 38, 39, 40].indexOf(e.keyCode) !== -1) {
+                    e.preventDefault();
+                }
             });
         }
         _events[eventType]['s'+this.index] = callback.bind(this);	//Vincula o escopo do evento

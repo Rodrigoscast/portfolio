@@ -79,7 +79,7 @@ export async function GET() {
         readFileSafe(path.join(base, "DemonstracaoCassette.tsx")),
       ],
       animation: [
-        readFileSafe(path.join(base, "CassetteModel.jsx")),
+        readFileSafe(path.join(base, "CoinModel.jsx")),
       ]
     },
   };

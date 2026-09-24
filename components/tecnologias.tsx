@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useTheme } from "next-themes";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import skillsData from "@/public/skills.json";
@@ -44,7 +44,6 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
     const [selecionado, setSelecionado] = useState<string | null>(null);
     const [skills, setSkills] = useState<any[]>([]);
     const [biblioteca, setBiblioteca] = useState<any>();
-    const [firstLoad, setFirstLoad] = useState(true)
 
     const lottieRefront = useRef<LottieRefCurrentProps>(null);
     const lottieRefback = useRef<LottieRefCurrentProps>(null);
@@ -160,14 +159,44 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
         Render, FastAPI, SimpleGUI, Outros, APIsREST, Tecnicas, Aplicacoes, Protecao, Pentest, Sistemas
     };
 
-    let delay = 0.3
+    const gridVariants: Variants = {
+        hidden: {},
+        visible: {
+            transition: {
+                delayChildren: 0.2,
+                staggerChildren: 0.1,
+            },
+        },
+        exit: {
+            transition: {
+                staggerChildren: 0.05,
+                staggerDirection: -1,
+            },
+        },
+    };
+
+    const itemVariants: Variants = {
+        hidden: { opacity: 0, scale: 0.75, y: 20 },
+        visible: {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            transition: { duration: 0.45, ease: "easeOut" },
+        },
+        exit: {
+            opacity: 0,
+            scale: 0.75,
+            y: 20,
+            transition: { duration: 0.2, ease: "easeIn" },
+        },
+    };
 
     return (
         <motion.div ref={ref} className="flex flex-col w-full items-center justify-start min-h-screen p-10 pt-10 overflow-hidden">
             <motion.h1
                 initial={{ opacity: 0, y: 50 }}
                 animate={visivel ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ delay: firstLoad ? delay : 0, duration: 0.6, ease: "easeOut" }}
+                transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
                 layout
                 className="font-bold text-3xl my-10 text-center transition-colors duration-500"
             >
@@ -201,30 +230,21 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                         <motion.div
                             key="grid"
                             layout
+                            variants={gridVariants}
+                            initial="hidden"
+                            animate={visivel ? "visible" : "hidden"}
+                            exit="exit"
                             className="flex flex-wrap justify-center items-center gap-10 w-full max-w-5xl py-10"
                         >
                             {categorias.map((cat, i) => {
-                                delay = firstLoad ? delay + 0.1 : i * 0.1;
                                 return (
                                     <motion.div
                                         key={cat.nome}
-                                        initial={{ opacity: 0, scale: 0 }}
-                                        animate={
-                                            visivel
-                                                ? { opacity: 1, scale: 1 }
-                                                : { opacity: 0, scale: 0 }
-                                        }
-                                        transition={{
-                                            delay,
-                                            duration: 0.6,
-                                            type: "spring",
-                                            stiffness: 120,
-                                            damping: 10
-                                        }}
+                                        variants={itemVariants}
                                     >
                                         <motion.div                                            
                                             layoutId={cat.nome}
-                                            onClick={() => { setSelecionado(cat.nome); setFirstLoad(false) }}                                            
+                                            onClick={() => setSelecionado(cat.nome)}
                                             onMouseEnter={() => cat.ref.current?.play()}
                                             onMouseLeave={() => {
                                                 cat.ref.current?.stop();
@@ -255,18 +275,20 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                         <motion.div
                             key="detalhe"
                             layout
+                            initial={{ opacity: 0, y: 24 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 24 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
                             className="flex flex-col items-center justify-center gap-6 w-full"
                         >
                             <motion.div
-                                layoutId={selecionado}
+                                layoutId={selecionado === "Mobile" ? undefined : selecionado}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.1 }}
-                                className={`flex justify-center items-center gap-10 w-full py-10 ${skillsData.find((x) => x.categoria === selecionado)?.skills ? 'flex-wrap' : selecionado == 'Backend' || selecionado == 'IA' || selecionado == 'Segurança' ? 'flex-wrap px-6' : 'flex-row'}`}
+                                className={`flex justify-center items-center gap-10 w-full py-10 ${skillsData.find((x) => x.categoria === selecionado)?.skills ? 'flex-wrap' : selecionado == 'Backend' || selecionado == 'IA' || selecionado == 'Segurança' || selecionado == 'Mobile' ? 'flex-wrap px-6' : 'flex-row'}`}
                                 transition={{
-                                    duration: 0.6,
-                                    type: "spring",
-                                    stiffness: 120,
-                                    damping: 10
+                                    duration: selecionado === "Mobile" ? 0.35 : 0.6,
+                                    ease: "easeOut"
                                 }}
                             >
                                 {skillsData.find((x) => x.categoria === selecionado)?.skills ? (
@@ -327,9 +349,16 @@ export default function Tecnologias({ visivel, ref }: { visivel: boolean, ref: a
                                             return (
                                                 <motion.div
                                                     key={i}
-                                                    layout
+                                                    layout={selecionado !== "Mobile"}
+                                                    initial={{ opacity: 0, y: 14 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{
+                                                        duration: 0.35,
+                                                        delay: selecionado === "Mobile" ? i * 0.08 : 0,
+                                                        ease: "easeOut",
+                                                    }}
                                                     className={`
-                                                        ${selecionado == "IA" || selecionado == "Segurança" ? 'min-h-50 max-w-4/10' : selecionado == "Mobile" ? 'min-w-3/10' : ''}
+                                                        ${selecionado == "IA" || selecionado == "Segurança" ? 'min-h-50 max-w-4/10' : selecionado == "Mobile" ? 'w-full md:w-[calc(50%-1.25rem)] max-w-md min-h-[220px]' : ''}
                                                         flex-col
                                                         flex gap-4
                                                         items-start

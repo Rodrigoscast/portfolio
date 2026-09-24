@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 export default function AnimatedBorder() {
     return (
-        <div className="absolute inset-0 pointer-events-none m-9">
+        <div className="absolute inset-0 pointer-events-none m-9 z-0">
             {/* Topo */}
             <motion.div
                 className="absolute top-0 left-0 h-[3px] bg-gray-400 z-14"

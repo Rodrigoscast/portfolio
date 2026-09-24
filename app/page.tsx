@@ -77,8 +77,14 @@ export default function Home() {
   const refInfos = useRef<HTMLDivElement>(null);
   const refKame = useRef<HTMLDivElement>(null);
 
-  const currentTheme = theme === "system" ? systemTheme : theme;
-  const isDark = currentTheme === "dark";
+  const [isClient, setIsClient] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    const currentTheme = theme === "system" ? systemTheme : theme;
+    setIsDark(currentTheme === "dark");
+  }, [theme, systemTheme])
 
   useEffect(() => {
     if (devMode) {
@@ -87,8 +93,18 @@ export default function Home() {
     }
   }, [devMode, devCode]);
 
-  const playlists = {
-    [lang === "pt" ? "todos" : "all"]: [
+  const playlistsBase = {
+    'todos': [
+      { title: "Good Night", artist: "BoDleasons", src: "/musics/lofi/Good_Night.mp3" },
+      { title: "Japan Lofi", artist: "FASSounds", src: "/musics/lofi/Japan_Lofi.mp3" },
+      { title: "Rainy City", artist: "lofidreams", src: "/musics/lofi/Rainy_City.mp3" },
+      { title: "Smooth Chill", artist: "FASSounds", src: "/musics/lofi/Smooth_Chill.mp3" },
+      { title: "Commercial Upbeat", artist: "Top-Flow", src: "/musics/rock/Commercial_Upbeat.mp3" },
+      { title: "Happy Rock", artist: "Top-Flow", src: "/musics/rock/Happy_Rock.mp3" },
+      { title: "Stomping Rock", artist: "AlexGrohl", src: "/musics/rock/Stomping_Rock.mp3" },
+      { title: "Whistle Joyride", artist: "Top-Flow", src: "/musics/rock/Whistle_Joyride.mp3" },
+    ],
+    'all': [
       { title: "Good Night", artist: "BoDleasons", src: "/musics/lofi/Good_Night.mp3" },
       { title: "Japan Lofi", artist: "FASSounds", src: "/musics/lofi/Japan_Lofi.mp3" },
       { title: "Rainy City", artist: "lofidreams", src: "/musics/lofi/Rainy_City.mp3" },
@@ -112,7 +128,7 @@ export default function Home() {
     ]
   };
 
-  function shuffle(array: any) {
+  function shuffle(array: any[]) {
     const arr = [...array];
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -124,9 +140,6 @@ export default function Home() {
   // Pega o nome correto da playlist "todos/all"
   const key = lang === "pt" ? "todos" : "all";
 
-  // Embaralha a playlist
-  playlists[key] = shuffle(playlists[key]);
-
   const playlistIcons = {
     'todos': <Disc3 className="text-amber-400" size={18} />,
     'all': <Disc3 className="text-amber-400" size={18} />,
@@ -134,19 +147,27 @@ export default function Home() {
     'lofi': <Coffee className="text-amber-400" size={18} />,
   } as const;
 
-  const [playlistAtual, setPlaylistAtual] = useState<keyof typeof playlists>("todos");
-  const [tracks, setTracks] = useState(playlists["todos"]);
+  const [playlistAtual, setPlaylistAtual] = useState<keyof typeof playlistsBase>("todos");
+  const [tracks, setTracks] = useState(playlistsBase["todos"]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Embaralha a playlist quando a linguagem muda (apenas no client)
+  useEffect(() => {
+    if (isClient) {
+      setTracks(shuffle(playlistsBase[key]));
+      setCurrentIndex(0);
+    }
+  }, [lang, isClient, key]);
   
-  function handlePlaylistChange(nova: keyof typeof playlists) {
+  function handlePlaylistChange(nova: keyof typeof playlistsBase) {
     setPlaylistAtual(nova);
-    setTracks(playlists[nova]);
+    setTracks(playlistsBase[nova]);
     setCurrentIndex(0);
 
     // troca a música atual imediatamente
     if (audioRef.current) {
       audioRef.current.pause();
-      audioRef.current.src = playlists[nova][0].src;
+      audioRef.current.src = playlistsBase[nova][0].src;
       audioRef.current.play();
       setIsPlaying(true);
     }
@@ -278,9 +299,9 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen bg-background overflow-hidden transition-colors duration-300">
-      {/* Glow que segue o mouse */}
+      {/* Glow que segue o mouse - pointer-events-none garantido */}
       <div
-        className="pointer-events-none absolute w-[600px] h-[600px] rounded-full blur-[150px] opacity-40 transition-transform duration-300 ease-out"
+        className="pointer-events-none absolute w-[600px] h-[600px] rounded-full blur-[150px] opacity-40 transition-transform duration-300 ease-out z-0"
         style={{
           transform: `translate(${position.x - 300}px, ${position.y - 300}px)`,
           background:
@@ -288,7 +309,7 @@ export default function Home() {
         }}
       />
       <AnimatedBorder />
-      <ScrollArea ref={scrollRef} className="m-9 h-[calc(100vh-4.5rem)] scrollbar-hidden">
+      <ScrollArea ref={scrollRef} className="m-9 h-[calc(100vh-4.5rem)] scrollbar-hidden relative z-10">
         <section
           id="home"
           className="text-foreground flex items-center justify-center h-[calc(100vh-4.5rem)] relative"
@@ -511,7 +532,9 @@ export default function Home() {
           initial={{ opacity: 0, y: 400 }}
           animate={info ? { opacity: 1, y: 0 } : { opacity: 0, y: 400 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="flex flex-col items-center justify-center text-foreground px-6 absolute bottom-0 right-14 z-13"
+          className={`flex flex-col items-center justify-center text-foreground px-6 absolute bottom-0 right-14 z-13 ${
+            info ? "pointer-events-auto" : "pointer-events-none"
+          }`}
         >
           {loading ? (
             <div>Carregando...</div>
@@ -562,18 +585,18 @@ export default function Home() {
                     </p>
                     <div className="flex w-full items-center flex-row gap-3">
                       <Select
-                        onValueChange={(value) => handlePlaylistChange(value as keyof typeof playlists)}
+                        onValueChange={(value) => handlePlaylistChange(value as keyof typeof playlistsBase)}
                         value={String(playlistAtual)}
                       >
                         <SelectTrigger
-                          className="p-1 w-12 hover:scale-110 transition-all duration-300 cursor-pointer"
+                          className="p-1 w-12 hover:scale-110 transition-all duration-300 cursor-pointer relative z-20"
                           title="Playlist"
                         >
                           {playlistIcons[playlistAtual as keyof typeof playlistIcons] || <ListMusic className="text-amber-400" size={18} />}
                         </SelectTrigger>
 
-                        <SelectContent>
-                          {Object.keys(playlists).map((key) => (
+                        <SelectContent className="relative z-30">
+                          {Object.keys(playlistsBase).map((key) => (
                             <SelectItem
                               key={key}
                               value={key}
